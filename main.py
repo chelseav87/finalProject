@@ -1,6 +1,6 @@
 #################################################### SETUP #############################################################
 # import modules/packages
-import random, sys, os, threading, time, ascii, keyboard, pygame
+import random, sys, os, threading, time, keyboard, pygame, lines
 
 # sound effects
 pygame.init()
@@ -112,19 +112,13 @@ def userInfo():
 
 ############################################## GAME EXPLANATION ########################################################
 def gameExplanation():
-    # dialogue
-    explLine1 = "When you are a young child,\033[0;49m this world will seem strange and foreign.\n\n"
-    explLine2 = "In this world of abnormalities,\033[0;49m you must traverse with caution.\n\n"
-    explLine3 = "Whatever happens will be a result of your choices,\033[1;31m so choose carefully.\033[0;49m \n\n"
-    explLine4 = "   ( + ) speed up text\n"
-    explLine5 = "   ( - ) return text to default speed\n\n\n"
 
     # call functions
-    dialogue(explLine1, dialogueSpeed, pauseDialogue)
-    dialogue(explLine2, dialogueSpeed, pauseDialogue)
-    dialogue(explLine3, dialogueSpeed, pauseDialogue)
-    dialogue(explLine4, 0, 0)
-    dialogue(explLine5, 0, pauseTransition)
+    dialogue(lines.explLine1, dialogueSpeed, pauseDialogue)
+    dialogue(lines.explLine2, dialogueSpeed, pauseDialogue)
+    dialogue(lines.explLine3, dialogueSpeed, pauseDialogue)
+    dialogue(lines.explLine4, 0, 0)
+    dialogue(lines.explLine5, 0, pauseTransition)
     skipIntro()
 
 ################################################ INTRODUCTION ##########################################################
@@ -499,7 +493,6 @@ def cubicleOption():
     time.sleep(pauseTransition)
     if option == 1:
         dialogue(cubicleLine1, dialogueSpeed, pauseDialogue)
-        print(ascii.ASCII_HINT)
         time.sleep(pauseTransition)
         dialogue(cubicleLine2, dialogueSpeed, pauseDialogue)
         dialogue(cubicleLine3, dialogueSpeed, pauseTransition)
@@ -566,7 +559,6 @@ def hackOption():
     time.sleep(pauseTransition)
     if option == 1:
         dialogue(hackLine1, dialogueSpeed, pauseTransition)
-        print(ascii.ASCII_HINT)
         askPassword = "Password: \n"
         dialogue(askPassword, dialogueSpeed, 0)
         enteredPassword = input("   ")
@@ -575,7 +567,6 @@ def hackOption():
             success.play()
             dialogue(hackLine2, dialogueSpeed, pauseDialogue)
             dialogue(hackLine3, dialogueSpeed, pauseDialogue)
-            print(ascii.ASCII_AKAMANTO)
             time.sleep(pauseTransition)
             dialogue(hackLine4, dialogueSpeed, pauseDialogue)
             dialogue(hackLine5, dialogueSpeed, pauseDialogue)
