@@ -114,11 +114,11 @@ def userInfo():
 def gameExplanation():
 
     # call functions
-    dialogue(lines.explLine1, dialogueSpeed, pauseDialogue)
-    dialogue(lines.explLine2, dialogueSpeed, pauseDialogue)
-    dialogue(lines.explLine3, dialogueSpeed, pauseDialogue)
-    dialogue(lines.explLine4, 0, 0)
-    dialogue(lines.explLine5, 0, pauseTransition)
+    dialogue(lines.expl_line1, dialogueSpeed, pauseDialogue)
+    dialogue(lines.expl_line2, dialogueSpeed, pauseDialogue)
+    dialogue(lines.expl_line3, dialogueSpeed, pauseDialogue)
+    dialogue(lines.expl_line4, 0, 0)
+    dialogue(lines.expl_line5, 0, pauseTransition)
     skipIntro()
 
 ################################################ INTRODUCTION ##########################################################
