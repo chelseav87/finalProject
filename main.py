@@ -1,6 +1,6 @@
 #################################################### SETUP #############################################################
 # import modules/packages
-import random, sys, os, threading, time, keyboard, pygame, lines
+import random, sys, os, threading, time, pygame, lines
 
 # sound effects
 pygame.init()
@@ -54,23 +54,6 @@ def clear():
     if os.name == 'nt':
         _ = os.system('cls')
 
-# key events
-def keyEvents():
-    while True:
-        key = keyboard.read_key()
-        if key == "+":
-            global dialogueSpeed, endingSpeed, dotSpeed, optionSpeed
-            dialogueSpeed = 0.005
-            endingSpeed = 0.03
-            dotSpeed = 0.3
-            optionSpeed = 0.005
-            continue
-        if key == "-":
-            dialogueSpeed = 0.04
-            endingSpeed = 0.06
-            dotSpeed = 0.6
-            optionSpeed = 0.01
-            continue
 
 # set up options
 def chooseOption(numberOfOptions):  # teacher supplied
@@ -117,8 +100,6 @@ def gameExplanation():
     dialogue(lines.expl_line1, dialogueSpeed, pauseDialogue)
     dialogue(lines.expl_line2, dialogueSpeed, pauseDialogue)
     dialogue(lines.expl_line3, dialogueSpeed, pauseDialogue)
-    dialogue(lines.expl_line4, 0, 0)
-    dialogue(lines.expl_line5, 0, pauseTransition)
     skipIntro()
 
 ################################################ INTRODUCTION ##########################################################
@@ -1256,8 +1237,6 @@ while True:
         pygame.mixer.music.stop()
         entryScene()
     else:
-        keysThread = threading.Thread(target=keyEvents)
-        keysThread.start()
         userInfo()
         gameRunning = True
 
