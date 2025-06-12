@@ -1,31 +1,37 @@
-#################################################### SETUP #############################################################
 # import modules/packages
-import random, sys, os, threading, time, pygame, lines
+import random
+import sys
+import os
+import threading
+import time
+import pygame
+import lines
+import config
 
 # sound effects
 pygame.init()
 pygame.mixer.pre_init(44100, -16, 2, 2048)
 folder = "media"
-box = pygame.mixer.Sound(os.path.join(folder, 'box.wav'))
-calendar = pygame.mixer.Sound(os.path.join(folder, 'calendar.wav'))
-door_close = pygame.mixer.Sound(os.path.join(folder, 'door_close.wav'))
-door_creak = pygame.mixer.Sound(os.path.join(folder, 'door_creak.wav'))
-door_locked = pygame.mixer.Sound(os.path.join(folder, 'door_locked.wav'))
-door_open = pygame.mixer.Sound(os.path.join(folder, 'door_open.wav'))
-error = pygame.mixer.Sound(os.path.join(folder, 'error.wav'))
-footsteps = pygame.mixer.Sound(os.path.join(folder, 'footsteps.wav'))
-gasp = pygame.mixer.Sound(os.path.join(folder, 'gasp.wav'))
-grenade = pygame.mixer.Sound(os.path.join(folder, 'grenade.wav'))
-heartbeat = pygame.mixer.Sound(os.path.join(folder, 'heartbeat.wav'))
-key_clatter = pygame.mixer.Sound(os.path.join(folder, 'key_clatter.wav'))
-locker_close = pygame.mixer.Sound(os.path.join(folder, 'locker_close.wav'))
-locker_locked = pygame.mixer.Sound(os.path.join(folder, 'locker_locked.wav'))
-locker_open = pygame.mixer.Sound(os.path.join(folder, 'locker_open.wav'))
-paper = pygame.mixer.Sound(os.path.join(folder, 'paper.wav'))
-running = pygame.mixer.Sound(os.path.join(folder, 'running.wav'))
-slash = pygame.mixer.Sound(os.path.join(folder, 'slash.wav'))
-success = pygame.mixer.Sound(os.path.join(folder, 'success.wav'))
-zip_up = pygame.mixer.Sound(os.path.join(folder, 'zip_up.wav'))
+box = pygame.mixer.Sound(os.path.join(folder, "box.wav"))
+calendar = pygame.mixer.Sound(os.path.join(folder, "calendar.wav"))
+door_close = pygame.mixer.Sound(os.path.join(folder, "door_close.wav"))
+door_creak = pygame.mixer.Sound(os.path.join(folder, "door_creak.wav"))
+door_locked = pygame.mixer.Sound(os.path.join(folder, "door_locked.wav"))
+door_open = pygame.mixer.Sound(os.path.join(folder, "door_open.wav"))
+error = pygame.mixer.Sound(os.path.join(folder, "error.wav"))
+footsteps = pygame.mixer.Sound(os.path.join(folder, "footsteps.wav"))
+gasp = pygame.mixer.Sound(os.path.join(folder, "gasp.wav"))
+grenade = pygame.mixer.Sound(os.path.join(folder, "grenade.wav"))
+heartbeat = pygame.mixer.Sound(os.path.join(folder, "heartbeat.wav"))
+key_clatter = pygame.mixer.Sound(os.path.join(folder, "key_clatter.wav"))
+locker_close = pygame.mixer.Sound(os.path.join(folder, "locker_close.wav"))
+locker_locked = pygame.mixer.Sound(os.path.join(folder, "locker_locked.wav"))
+locker_open = pygame.mixer.Sound(os.path.join(folder, "locker_open.wav"))
+paper = pygame.mixer.Sound(os.path.join(folder, "paper.wav"))
+running = pygame.mixer.Sound(os.path.join(folder, "running.wav"))
+slash = pygame.mixer.Sound(os.path.join(folder, "slash.wav"))
+success = pygame.mixer.Sound(os.path.join(folder, "success.wav"))
+zip_up = pygame.mixer.Sound(os.path.join(folder, "zip_up.wav"))
 
 # some variables
 weights = [35, 35, 10, 20]
@@ -35,7 +41,6 @@ dotSpeed = 0.6
 optionSpeed = 0.01
 pauseDialogue = 0.5
 pauseTransition = 1
-optionError = "..Please select one of the options.\n\n"
 inventory = []
 endings = []
 largeBox = ["itemRubberDuck", "itemChewedHomework", "itemFreshCake", "itemGrenade"]
@@ -48,11 +53,6 @@ def dialogue(line, parameterSpeed, parameterPause):
         sys.stdout.flush()
         time.sleep(parameterSpeed)
     time.sleep(parameterPause)
-
-# "clear" for pycharm
-def clear():
-    if os.name == 'nt':
-        _ = os.system('cls')
 
 
 # set up options
@@ -69,31 +69,22 @@ def chooseOption(numberOfOptions):  # teacher supplied
             option = int(option)
         return option
 
-################################################# USER INFO ############################################################
 def userInfo():
-    # dialogue
-    clear()
-    askUserName = "Enter your name.\n"
-    userError = "..Please enter something.\n\n"
-
     # call function
-    dialogue(askUserName, dialogueSpeed, 0)
+    dialogue(lines.ask_username, dialogueSpeed, 0)
+
+    username = input()
 
     # store as username
-    global username
-    username = input("   ")
     time.sleep(pauseTransition)
 
     # jump scene
     if username == "":
-        clear()
-        dialogue(userError, dialogueSpeed, pauseTransition)
+        dialogue(lines.user_error, dialogueSpeed, pauseTransition)
         userInfo()
     else:
-        clear()
         gameExplanation()
 
-############################################## GAME EXPLANATION ########################################################
 def gameExplanation():
 
     # call functions
@@ -102,14 +93,9 @@ def gameExplanation():
     dialogue(lines.expl_line3, dialogueSpeed, pauseDialogue)
     skipIntro()
 
-################################################ INTRODUCTION ##########################################################
 def skipIntro():
-    # dialogue
-    skipLine = "Skip introduction? Y/N"
-    skipError = "..Please enter Y or N.\n\n"
-
     # call function
-    dialogue(skipLine, dialogueSpeed, 0)
+    dialogue(lines.skip_line, dialogueSpeed, 0)
 
     # store as skip
     skip = input("\n   ")
@@ -118,73 +104,40 @@ def skipIntro():
 
     # jump scene
     if skip == "N" or skip == "NO":
-        clear()
         introScene()
     elif skip == "Y" or skip == "YES":
-        clear()
         entryScene()
     else:
-        clear()
-        dialogue(skipError, dialogueSpeed, pauseTransition)
+        dialogue(lines.skip_error, dialogueSpeed, pauseTransition)
         skipIntro()
 
 def introScene():
     pygame.mixer.music.load(os.path.join(folder, 'intro_theme.mp3'))
     pygame.mixer.music.play(-1)
 
-    # dialogue
-    introLine1 = "It's a calm, sunny afternoon, and you decide to walk home with a friend after a long day of " \
-                 "school.\033[0;49m You both ponder about assignments and upcoming tests, while occasionally teasing " \
-                 "each other and such.\033[0;49m Just then, you remember the homework that is due soon.\033[0;49m You " \
-                 "ask your friend if they want to stop by a cafe and work on it with you.\n\n"
-    introLine2 = "Your friend hesitates for a moment, stopping in their tracks, before beginning to rummage through " \
-                 "their bag.\033[0;49m You see their face gradually become worried.\n\n"
-    introLine3 = '"Shoot.\033[0;49m Did I forget my homework at school?"\n\n'
-    introLine4 = "You can see them panicking a bit.\033[0;49m You aren't exactly in a rush, so you wouldn't really " \
-                 "mind going back.\033[0;49m How about walking back together?\n\n"
-    introLine5 = '"No,\033[0;49m I have an important family event today, I REALLY need to go."\n\n'
-    introLine6 = "I mean, it's just homework, right?\033[0;49m It's not that big of a deal.\033[0;49m Surely Mr. W " \
-                 "wouldn't mind it if you missed it by just one day.\033[0;49m But then again, it is worth 90% of " \
-                 "your final grade..\n\n"
-    introLine7 = "Since you don't have any other plans and you're practically almost finished with your homework, " \
-                 "you offer to go back and get their homework for them.\033[0;49m They thank you profusely before you " \
-                 "go both your separate ways."
-
     # call functions
     footsteps.play()
-    dialogue(introLine1, dialogueSpeed, pauseDialogue)
-    dialogue(introLine2, dialogueSpeed, pauseDialogue)
-    dialogue(introLine3, dialogueSpeed, pauseDialogue)
-    dialogue(introLine4, dialogueSpeed, pauseDialogue)
-    dialogue(introLine5, dialogueSpeed, pauseDialogue)
-    dialogue(introLine6, dialogueSpeed, pauseDialogue)
+    dialogue(lines.intro_line1, dialogueSpeed, pauseDialogue)
+    dialogue(lines.intro_line2, dialogueSpeed, pauseDialogue)
+    dialogue(lines.intro_line3, dialogueSpeed, pauseDialogue)
+    dialogue(lines.intro_line4, dialogueSpeed, pauseDialogue)
+    dialogue(lines.intro_line5, dialogueSpeed, pauseDialogue)
+    dialogue(lines.intro_line6, dialogueSpeed, pauseDialogue)
     footsteps.play()
-    dialogue(introLine7, dialogueSpeed, pauseTransition)
+    dialogue(lines.intro_line7, dialogueSpeed, pauseTransition)
 
     # jump scene
-    clear()
     entryScene()
 
-################################################### ENTRY ##############################################################
 def entryScene():
     pygame.mixer.music.load(os.path.join(folder, 'main_theme.mp3'))
     pygame.mixer.music.play(-1)
-
-    # dialogue
-    entryLine1 = "You're back standing in front of the school.\033[0;49m It's only been a little while since you've " \
-                 "left, but it seems that everyone has gone home already.\033[0;49m It's eerily quiet here.\n\n"
 
     # call functions
     dialogue(entryLine1, dialogueSpeed, pauseTransition)
     entryOption()
 
 def entryOption():
-    # dialogue
-    entryOptions = ["   (1) Search inside the school.\n",
-                    "   (2) Search the schoolyard.\n",
-                    "   (3) Go home.\n"]
-    entryLine2 = "\nNevertheless, you swallow back that off-feeling, knowing that your friend is depending on you."
-
     # call functions
     for line in entryOptions:
         dialogue(line, optionSpeed, 0)
@@ -195,46 +148,24 @@ def entryOption():
     if option == 1:
         footsteps.play()
         dialogue(entryLine2, dialogueSpeed, pauseTransition)
-        clear()
         schoolScene()
     elif option == 2:
         footsteps.play()
         dialogue(entryLine2, dialogueSpeed, pauseTransition)
-        clear()
         yardScene()
     elif option == 3:
-        clear()
         exitScene()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         entryOption()
 
-################################################## SCHOOL ##############################################################
 def schoolScene():
-    # dialogue
-    schoolLine1 = "The sounds of the creaking school door echoes through the empty hallways.\033[0;49m There doesn't " \
-                  "seem to be anyone as you look around, but all of the lights are still on.\033[0;49m Surely there " \
-                  "should be some lingering teachers or students around?\n\n"
-
     # call functions
     door_creak.play()
     dialogue(schoolLine1, dialogueSpeed, pauseTransition)
     schoolOption()
 
 def schoolOption():
-    # dialogue
-    schoolOptions = ["   (1) Search the homeroom class.\n",
-                     "   (2) Search the staff room.\n",
-                     "   (3) Search your friend's locker.\n",
-                     "   (4) Search the schoolyard.\n",
-                     "   (5) Leave the school.\n",
-                     "   (6) Go to the bathroom?\n"]
-    schoolLine2 = "\nAll the bathrooms are locked after school hours.\033[0;49m However, there's always an open one " \
-                  "at the very end of the campus, but none of the staff actually know about it.\n\n"
-    schoolLine3 = "You're positive your friend wouldn't leave their homework in there, yet you really wanted to go " \
-                  "for some reason."
-
     # call functions
     for line in schoolOptions:
         dialogue(line, optionSpeed, 0)
@@ -243,66 +174,34 @@ def schoolOption():
     option = chooseOption(6)
     time.sleep(pauseTransition)
     if option == 1:
-        clear()
         classScene()
     elif option == 2:
-        clear()
         staffScene()
     elif option == 3:
-        clear()
         lockerScene()
     elif option == 4:
-        clear()
         yardScene()
     elif option == 5:
-        clear()
         entryScene()
     elif option == 6:
         dialogue(schoolLine2, dialogueSpeed, pauseDialogue)
         footsteps.play()
         dialogue(schoolLine3, dialogueSpeed, pauseTransition)
-        clear()
         bathroomScene()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         schoolOption()
 
 ################################################### CLASS ##############################################################
 def classScene():
-    # dialogue
-    classLine1 = "As you look around the classroom, you don't see anyone except for some leftover schoolbags.\033[" \
-                 "0;49m Strange.\n\n"
-
     # call functions
     door_open.play()
     dialogue(classLine1, dialogueSpeed, pauseTransition)
     classOption()
 
 def classOption():
-    # dialogue
-    classOptions = ["   (1) Search the student desks.\n",
-                    "   (2) Look at the floor.\n",
-                    "   (3) Leave the classroom.\n",
-                    "   (4) Search Mr. W's desk.\n"]
     if "itemStaffKeycard" in inventory:
         classOptions.pop()
-    classLine2 = "\nYou search through each of the student's desks until you find what seems to be your friend's " \
-                 "desk.\033[0;49m You dig through, pulling out random papers in search of the homework.\n\n"
-    classLine3 = "To your dismay, you don't find it.\033[0;49m However, as you shove all the papers back into the " \
-                 "desk, a loose piece of paper flies out!\033[0;49m You quickly catch it before it touches the floor, " \
-                 "catching a glance at what it is..\n\n"
-    classLine4 = "Oh!\033[0;49m It's the birthday letter you wrote for your friend.\033[0;49m Ah, right! Their " \
-                 "birthday is on the same day as the homework's due date.\033[0;49m Haha, what a birthday gift!\033[" \
-                 "0;49m You carefully slip the letter back into their desk, subtly laughing to yourself."
-    classLine5 = "\nYou look down at the pristine, white floor, scanning for any loose papers..\n\n"
-    classLine6 = "..."
-    classLine7 = "\n\nYou look at the floor harder..\n\n"
-    classLine8 = "Uhm.\033[0;49m It's not there."
-    classLine9 = "\nMaybe there's extra copies of the homework somewhere in here.\n\n"
-    classLine10 = "You flip through the folders and rummage through his stuff.\033[0;49m Unfortunately, he doesn't " \
-                  "have any extras.\n\n"
-    classLine11 = "However, as you search through Mr. W's bag, you do find a staff keycard..\n\n"
 
     # call function
     for line in classOptions:
@@ -317,17 +216,14 @@ def classOption():
         dialogue(classLine3, dialogueSpeed, pauseDialogue)
         calendar.play()
         dialogue(classLine4, dialogueSpeed, pauseTransition)
-        clear()
         classOption()
     elif option == 2:
         dialogue(classLine5, dialogueSpeed, pauseTransition)
         dialogue(classLine6, dotSpeed, pauseTransition)
         dialogue(classLine7, dialogueSpeed, 3)
         dialogue(classLine8, dialogueSpeed, pauseTransition)
-        clear()
         classOption()
     elif option == 3:
-        clear()
         schoolScene()
     elif option == 4:
         dialogue(classLine9, dialogueSpeed, pauseDialogue)
@@ -337,21 +233,10 @@ def classOption():
         dialogue(classLine11, dialogueSpeed, pauseTransition)
         keycardOption()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         classOption()
 
 def keycardOption():
-    # dialogue
-    keycardOptions = ["   (1) Take it!\n",
-                      "   (2) ..This is an invasion of privacy.\n"]
-    keycardLine1 = "\nThis should be useful for later.\n\n"
-    keycardLine2 = "Like the kleptomaniac you are, you psych yourself up before taking the keycard and slipping it " \
-                   "into your pocket.\n\n"
-    keycardLine3 = "\033[38;5;14mOBTAINED 'STAFF KEYCARD'\033[0;49m"
-    keycardLine4 = "\nOkay, scaredy-cat.\n\n"
-    keycardLine5 = "You zip up the bag, brushing it off before setting it back down onto the floor."
-
     # call function
     for line in keycardOptions:
         dialogue(line, optionSpeed, 0)
@@ -366,43 +251,24 @@ def keycardOption():
         success.play()
         dialogue(keycardLine3, dialogueSpeed, pauseTransition)
         inventory.append("itemStaffKeycard")
-        clear()
         classOption()
     elif option == 2:
         dialogue(keycardLine4, dialogueSpeed, pauseDialogue)
         zip_up.play()
         dialogue(keycardLine5, dialogueSpeed, pauseTransition)
-        clear()
         classOption()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         keycardOption()
 
 ################################################### STAFF ##############################################################
 def staffScene():
-    # dialogue
-    staffLine1 = "Well, since there seems to be no one around, you could probably search the staff room.\033[0;49m " \
-                 "Cautiously, you peek inside to see if there's anyone inside.\n\n"
-    staffLine2 = "Of course, it's empty.\n\n"
-
     # call functions
     dialogue(staffLine1, dialogueSpeed, pauseDialogue)
     dialogue(staffLine2, dialogueSpeed, pauseTransition)
     staffOption()
 
 def staffOption():
-    # dialogue
-    staffOptions = ["   (1) Search inside the staff room.\n",
-                    "   (2) Leave.\n"]
-    staffLine3 = "..."
-    staffLine4 = "\n\nAh, of course.\033[0;49m The door can only be unlocked by staff.."
-    staffLine5 = "\n\nYou fish for the keycard in your pocket and swipe it through the door's sensor.\033[0;49m The " \
-                 "door opens with a click, slowly cracking open as you cautiously look around once more.\n\n"
-    staffLine6 = "You quickly find Mr. W's cubicle.\033[0;49m Scanning through, there is a laptop, a calendar, " \
-                 "several piles of schoolwork, and several scattered pens.\n\n"
-    staffLine7 = "You aren't supposed to be here, anyway."
-
     # call functions
     for line in staffOptions:
         dialogue(line, optionSpeed, 0)
@@ -424,47 +290,16 @@ def staffOption():
             door_locked.play()
             dialogue(staffLine3, dotSpeed, pauseTransition)
             dialogue(staffLine4, dialogueSpeed, pauseTransition)
-            clear()
             staffOption()
     elif option == 2:
         footsteps.play()
         dialogue(staffLine7, dialogueSpeed, pauseTransition)
-        clear()
         schoolScene()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         staffOption()
 
 def cubicleOption():
-    # dialogue
-    cubicleOptions = ["   (1) Use the laptop.\n",
-                      "   (2) Examine the calendar.\n",
-                      "   (3) Search the piles of schoolwork.\n",
-                      "   (4) Leave.\n"]
-    cubicleLine1 = "\nYou try to use the computer, but it's locked behind a password.\033[0;49m After a few " \
-                   "unsuccessful attempts, you finally get a hint..\n\n"
-    cubicleLine2 = "\n..What kind of..\n\n"
-    cubicleLine3 = "It's just a bunch of black and white squares.\033[0;49m You call this a hint?\n\n"
-    cubicleLine4 = "\nThe calendar is hung on the inner sidewall of the cubicle, skipped to April.\033[0;49m It has " \
-                   "several markings with dates for meetings and assignment due dates, including the homework's due " \
-                   "date next Monday.\n\n"
-    cubicleLine5 = "Other than that, nothing seems to be very significant."
-    cubicleLine6 = "\nYou dig through the piles of schoolwork, pulling out several marked and unmarked assignments " \
-                   "from students.\033[0;49m You catch a glimpse of your name in the sea of paper.\033[0;49m It's the " \
-                   "unit test from last Friday!\n\n"
-    cubicleLine7 = "You scan the top of your paper..\n\n"
-    cubicleLine8 = f'   "{username},\033[0;49m Period: 1,\033[0;49m April 11.."\n\n'
-    cubicleLine9 = "..Huh?\n\n"
-    cubicleLine10 = "..Is that a 65%?\033[0;49m Here you thought you aced this test.\033[0;49m Wow, and it looks like " \
-                    "everyone else did really well.\n\n"
-    cubicleLine11 = "Other than that, there's no extra homework lying around.\n\n"
-    cubicleLine12 = "Frustrated, you carefully stack up the papers back to its original state, as if no one touched it."
-    cubicleLine13 = "\nYeah, that's enough snooping around for now.\033[0;49m You didn't find any homework, " \
-                    "but whatever.\033[0;49m You wouldn't want to go through the trouble of searching or printing out " \
-                    "a whole new copy without anyone noticing, anyway.\n\n"
-    cubicleLine14 = "You turn back around and leave the staff room, softly closing the door behind you."
-
     # call functions
     for line in cubicleOptions:
         dialogue(line, optionSpeed, 0)
@@ -482,7 +317,6 @@ def cubicleOption():
         calendar.play()
         dialogue(cubicleLine4, dialogueSpeed, pauseDialogue)
         dialogue(cubicleLine5, dialogueSpeed, pauseTransition)
-        clear()
         cubicleOption()
     elif option == 3:
         paper.play()
@@ -495,16 +329,13 @@ def cubicleOption():
         dialogue(cubicleLine11, dialogueSpeed, pauseDialogue)
         paper.play()
         dialogue(cubicleLine12, dialogueSpeed, pauseTransition)
-        clear()
         cubicleOption()
     elif option == 4:
         dialogue(cubicleLine13, dialogueSpeed, pauseDialogue)
         door_close.play()
         dialogue(cubicleLine14, dialogueSpeed, pauseTransition)
-        clear()
         schoolScene()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         cubicleOption()
 
@@ -555,20 +386,16 @@ def hackOption():
             dialogue(hackLine7, dialogueSpeed, pauseTransition)
             global allowEscape
             allowEscape = True
-            clear()
             cubicleOption()
         else:
             error.play()
             dialogue(hackLine8, dialogueSpeed, pauseDialogue)
             dialogue(hackLine9, dialogueSpeed, pauseTransition)
-            clear()
             hackOption()
     elif option == 2:
         dialogue(hackLine10, dialogueSpeed, pauseTransition)
-        clear()
         cubicleOption()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         hackOption()
 
@@ -584,13 +411,11 @@ def lockerScene():
     # call functions
     if "itemHomework" not in inventory:
         dialogue(lockerLine1, dialogueSpeed, pauseTransition)
-        clear()
         lockerOption()
     else:
         dialogue(lockerLine2, dialogueSpeed, pauseDialogue)
         footsteps.play()
         dialogue(lockerLine3, dialogueSpeed, pauseTransition)
-        clear()
         schoolScene()
 
 def lockerOption():
@@ -605,7 +430,7 @@ def lockerOption():
                   "and..\n\n"
     lockerLine9 = "..Huh?\n\n"
     lockerLine10 = "Something falls out and clatters onto the floor.\033[0;49m You pick it up and examine it.\n\n"
-    lockerLine11 = f'It is a small, antique-looking key, attached with a small tag with the name.. "{username}"?\033[' \
+    lockerLine11 = f'It is a small, antique-looking key, attached with a small tag with the name.. "{config.username}"?\033[' \
                    f'0;49m Is it addressed to you?\n\n'
     lockerLine12 = "They must've anticipated this.\033[0;49m You slip the small key carefully into your pocket, " \
                    "closing the locker before setting off once more.\n\n"
@@ -643,20 +468,16 @@ def lockerOption():
             dialogue(lockerLine13, endingSpeed, pauseTransition)
             inventory.append("itemHomework")
             inventory.append("itemSmallKey")
-            clear()
             schoolScene()
         else:
             locker_locked.play()
             dialogue(lockerLine14, dialogueSpeed, pauseTransition)
             dialogue(lockerLine15, dialogueSpeed, pauseTransition)
-            clear()
             lockerOption()
     elif option == 2:
         dialogue(lockerLine16, dialogueSpeed, pauseTransition)
-        clear()
         schoolScene()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         lockerOption()
 
@@ -695,28 +516,22 @@ def yardOption():
     option = chooseOption(len(yardOptions))
     time.sleep(pauseTransition)
     if option == 1:
-        clear()
         schoolScene()
     elif option == 2:
         dialogue(yardLine2, dialogueSpeed, pauseDialogue)
         dialogue(yardLine3, dialogueSpeed, pauseDialogue)
         dialogue(yardLine4, dialogueSpeed, pauseTransition)
-        clear()
         yardOption()
     elif option == 3:
-        clear()
         hiddenScene()
     elif option == 4:
-        clear()
         exitScene()
     elif option == 5 and "itemFreshCake" in inventory:
         dialogue(yardLine5, dialogueSpeed, pauseDialogue)
         pygame.mixer.music.pause()
         dialogue(yardLine6, dialogueSpeed, pauseTransition)
-        clear()
         vergilScene()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         yardOption()
 
@@ -727,7 +542,6 @@ def bathroomTimer():
         time.sleep(1)
         totalSeconds -= 1
     if totalSeconds == 0 and timerRunning:
-        clear()
         endingUrgent()
 
 def bathroomScene():
@@ -793,17 +607,14 @@ def bathroomOption():
     elif option == 2:
         timerRunning = False
         dialogue(bathroomLine11, dialogueSpeed, pauseTransition)
-        clear()
         timerRunning = True
         bathroomOption()
     elif option == 3 and "itemGrenade" in inventory:
         timerRunning = False
         pygame.mixer.music.stop()
-        clear()
         endingCinema()
     else:
         timerRunning = False
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         timerRunning = True
         bathroomOption()
@@ -824,16 +635,12 @@ def paperOption():
     option = chooseOption(len(paperOptions))
     time.sleep(pauseTransition)
     if option == 1:
-        clear()
         endingRed()
     elif option == 2:
-        clear()
         endingBlue()
     elif option == 3 and allowEscape:
-        clear()
         endingEscaped()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         paperOption()
 
@@ -850,7 +657,6 @@ def hiddenScene():
         dialogue(hiddenLine2, dialogueSpeed, pauseDialogue)
         footsteps.play()
         dialogue(hiddenLine3, dialogueSpeed, pauseTransition)
-        clear()
         yardScene()
     else:
         footsteps.play()
@@ -896,16 +702,13 @@ def hiddenOption():
             door_locked.play()
             dialogue(hiddenLine4, dotSpeed, pauseTransition)
             dialogue(hiddenLine5, dialogueSpeed, pauseTransition)
-            clear()
             hiddenOption()
     elif option == 2:
         dialogue(hiddenLine9, dialogueSpeed, pauseDialogue)
         footsteps.play()
         dialogue(hiddenLine10, dialogueSpeed, pauseTransition)
-        clear()
         yardScene()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         hiddenOption()
 
@@ -951,14 +754,12 @@ def boxOption():
             dialogue(boxLine3, dialogueSpeed, pauseTransition)
             weights.remove(35)
             largeBox.remove("itemRubberDuck")
-            clear()
             boxOption()
         elif retrievedItem == "itemChewedHomework":
             dialogue(boxLine4, dialogueSpeed, pauseDialogue)
             dialogue(boxLine5, dialogueSpeed, pauseTransition)
             weights.remove(35)
             largeBox.remove("itemChewedHomework")
-            clear()
             boxOption()
         elif retrievedItem == "itemFreshCake":
             dialogue(boxLine6, dialogueSpeed, pauseDialogue)
@@ -971,21 +772,17 @@ def boxOption():
             footsteps.play()
             dialogue(boxLine11, dialogueSpeed, pauseTransition)
             inventory.append("itemFreshCake")
-            clear()
             yardScene()
         else:
             dialogue(boxLine12, dialogueSpeed, pauseDialogue)
             dialogue(boxLine13, dialogueSpeed, pauseTransition)
-            clear()
             grenadeOption()
     elif option == 2:
         dialogue(boxLine14, dialogueSpeed, pauseDialogue)
         door_close.play()
         dialogue(boxLine15, dialogueSpeed, pauseTransition)
-        clear()
         yardScene()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         boxOption()
 
@@ -1014,16 +811,13 @@ def grenadeOption():
         door_close.play()
         dialogue(grenadeLine3, dialogueSpeed, pauseTransition)
         inventory.append("itemGrenade")
-        clear()
         yardScene()
     elif option == 2:
         dialogue(grenadeLine4, dialogueSpeed, pauseTransition)
-        clear()
         weights.remove(20)
         largeBox.remove("itemGrenade")
         boxOption()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         grenadeOption()
 
@@ -1054,17 +848,14 @@ def vergilOption():
     option = chooseOption(2)
     time.sleep(pauseTransition)
     if option == 1:
-        clear()
         endingVergil()
     elif option == 2:
         dialogue(vergilLine3, dialogueSpeed, pauseDialogue)
         pygame.mixer.music.unpause()
         footsteps.play()
         dialogue(vergilLine4, dialogueSpeed, pauseTransition)
-        clear()
         yardScene()
     else:
-        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         vergilOption()
 
@@ -1074,10 +865,8 @@ def exitScene():
         falseEnding = "You try to leave the school grounds, but you suddenly feel an otherworldly presence pulling " \
                       "you back.\033[0;49m Must be that weapon of yours, huh?\033[0;49m Invisible video game " \
                       "barriers!\033[0;49m Looks like you're gonna have to turn around.\n\n"
-        clear()
         pygame.mixer.music.pause()
         dialogue(falseEnding, dialogueSpeed, pauseTransition)
-        clear()
         pygame.mixer.music.unpause()
         entryScene()
     else:
@@ -1261,19 +1050,16 @@ while True:
 
     # jump scene
     if replay == "Y" or replay == "YES":
-        clear()
         continue
     elif replay == "N" or replay == "NO":
         break
     else:
-        clear()
         dialogue(replayError, dialogueSpeed, pauseTransition)
         break
 
 #################################################### QUIT GAME #########################################################
 # dialogue
-clear()
-quitLine1 = f"Thank you for playing, {username}!"
+quitLine1 = f"Thank you for playing, {config.username}!"
 quitLine2 = "\nQuitting now.."
 
 # call functions
@@ -1281,5 +1067,4 @@ dialogue(quitLine1, dialogueSpeed, pauseDialogue)
 dialogue(quitLine2, dialogueSpeed, pauseTransition)
 
 # quit
-clear()
 exit()
