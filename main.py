@@ -6,7 +6,6 @@ import threading
 import time
 import pygame
 import lines
-import config
 
 # sound effects
 pygame.init()
@@ -70,16 +69,12 @@ def chooseOption(numberOfOptions):  # teacher supplied
         return option
 
 def userInfo():
-    # call function
-    dialogue(lines.ask_username, dialogueSpeed, 0)
-
-    username = input()
-
     # store as username
+    dialogue(lines.test, dialogueSpeed, pauseTransition)
     time.sleep(pauseTransition)
 
     # jump scene
-    if username == "":
+    if lines.username == "":
         dialogue(lines.user_error, dialogueSpeed, pauseTransition)
         userInfo()
     else:
@@ -430,7 +425,7 @@ def lockerOption():
                   "and..\n\n"
     lockerLine9 = "..Huh?\n\n"
     lockerLine10 = "Something falls out and clatters onto the floor.\033[0;49m You pick it up and examine it.\n\n"
-    lockerLine11 = f'It is a small, antique-looking key, attached with a small tag with the name.. "{config.username}"?\033[' \
+    lockerLine11 = f'It is a small, antique-looking key, attached with a small tag with the name.. "{lines.username}"?\033[' \
                    f'0;49m Is it addressed to you?\n\n'
     lockerLine12 = "They must've anticipated this.\033[0;49m You slip the small key carefully into your pocket, " \
                    "closing the locker before setting off once more.\n\n"
@@ -1059,7 +1054,7 @@ while True:
 
 #################################################### QUIT GAME #########################################################
 # dialogue
-quitLine1 = f"Thank you for playing, {config.username}!"
+quitLine1 = f"Thank you for playing, {lines.username}!"
 quitLine2 = "\nQuitting now.."
 
 # call functions

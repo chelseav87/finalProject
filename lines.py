@@ -1,7 +1,8 @@
 optionError = "..Please select one of the options.\n\n"
 
 # user_info()
-ask_username = "Enter your name.\n"
+username = input("Enter your name.\n   ")
+test = f"you are {username}"
 user_error = "..Please enter something.\n\n"
 
 # skip_intro()
