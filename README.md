@@ -1,5 +1,7 @@
 # finalProject
 
+To output text as intended, navigate to Run => Edit Configurations => Edit configuration templates => Python, then enable "emulate terminal in output console"
+
 original code (from PCYOAG project)
 
     #################################################### SETUP #############################################################
