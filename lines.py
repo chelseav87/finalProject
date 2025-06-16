@@ -1,9 +1,14 @@
+import time
+
+
 def ask_username():
     name = input("Enter your name.\n   ")
     if name.strip() == "":
+        time.sleep(0.5)
         print("..Please enter something.\n\n")
         ask_username()
     else:
+        time.sleep(0.5)
         return name
 
 
@@ -13,7 +18,7 @@ endings = []
 # errors
 option_error = "..Please select one of the options.\n\n"
 skip_error = "..Please enter Y or N.\n\n"
-replayError = "..I'm going to assume that's a no.\n"
+replay_error = "..I'm going to assume that's a no.\n"
 
 # skip_intro()
 skip_line = "Skip introduction? Y/N"
@@ -75,8 +80,8 @@ class_line_2 = "\nYou search through each of the student's desks until you find 
 class_line_3 = "To your dismay, you don’t find it, so you quickly shove all the papers back into the desk, " \
                "lazily picking up some loose papers and putting them back in with the others.\n\n "
 class_line_4 = "\nYou look down at the pristine, white floor, scanning for any loose papers..\n\n"
-class_line_5 = "Oh! It’s the birthday letter you wrote for your friend. Ah, right! Their birthday is the same day as " \
-               "the homework’s due date. Haha, what a birthday gift!\n\n"
+class_line_5 = "Oh! It’s the birthday letter you wrote for your friend.\033[0;49m Ah, right! Their birthday is the " \
+               "same day as the homework’s due date.\033[0;49m Haha, what a birthday gift!\n\n"
 class_line_6 = "You carefully slip the letter back into their desk, subtly laughing to yourself."
 class_line_7 = "..."
 class_line_8 = "\n\nYou look at the floor harder..\n\n"
@@ -138,10 +143,10 @@ hack_option = ["   (1) Enter the password.\n",
                "   (2) Forget it.\n"]
 hack_line_1 = "\nPassword Hint:"
 hack_line_2 = "\n..Got it!\n\n"
-hack_line_3 = "The laptop unlocks before you as you celebrate internally. However, before you can navigate through " \
-              "it, an open tab catches your eye. It seems to be a report of a missing student at this school. On a " \
-              "separate tab, a low quality depiction of a masked figure wearing a red cloak nearly makes you jump " \
-              "out of your seat.\n\n "
+hack_line_3 = "The laptop unlocks before you as you celebrate internally.\033[0;49m However, before you can navigate " \
+              "through it, an open tab catches your eye.\033[0;49m It seems to be a report of a missing student at " \
+              "this school.\033[0;49m On a separate tab, a low quality depiction of a masked figure wearing a red " \
+              "cloak nearly makes you jump out of your seat.\n\n"
 hack_line_4 = "\nThat image is..\033[0;49m Very creepy.\n\n"
 hack_line_5 = "It's rumored that the student's disappearance was due to a supernatural entity in one of the school " \
               "bathrooms.\033[0;49m You've heard claims of another student who survived the spirit by outsmarting " \
@@ -227,8 +232,8 @@ hidden_line_3 = "You turn around and walk back to the yard.\n\n"
 hidden_line_4 = "..."
 hidden_line_5 = "\n\nLocked.\033[0;49m Looks like it can only be opened with a key.."
 hidden_line_6 = "\n\nYou fish for the key in your pocket and insert it into the keyhole, pulling the door " \
-                "open.\033[0;49m Immediately, dust starts flying everywhere. Seems like no one has been here in " \
-                "ages..\n\n "
+                "open.\033[0;49m Immediately, dust starts flying everywhere.\033[0;49m Seems like no one has been " \
+                "here in ages..\n\n "
 hidden_line_7 = "You turn on the lights, quickly scanning the room for your friend's homework.\033[0;49m Of course, " \
                 "you don't see it.\n\n"
 hidden_line_8 = "However, something else catches your attention.\033[0;49m A large open box, sitting at the very " \

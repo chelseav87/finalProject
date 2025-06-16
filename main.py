@@ -46,12 +46,12 @@ gameRunning = False
 
 
 # set text behaviour
-def dialogue(line, parameterSpeed, parameterPause):
-    for char in line:
+def dialogue(story_line, parameter_speed, parameter_pause):
+    for char in story_line:
         sys.stdout.write(char)
         sys.stdout.flush()
-        time.sleep(parameterSpeed)
-    time.sleep(parameterPause)
+        time.sleep(parameter_speed)
+    time.sleep(parameter_pause)
 
 
 def clear():
@@ -280,8 +280,8 @@ def staffScene():
 
 def staffOption():
     # call functions
-    for line in lines.staff_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.staff_option:
+        dialogue(story_line, optionSpeed, 0)
 
     # options
     option = chooseOption(2)
@@ -314,8 +314,8 @@ def staffOption():
 
 def cubicleOption():
     # call functions
-    for line in lines.cubicle_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.cubicle_option:
+        dialogue(story_line, optionSpeed, 0)
 
     # options
     option = chooseOption(4)
@@ -358,8 +358,8 @@ def cubicleOption():
 
 def hackOption():
     # call functions
-    for line in lines.hack_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.hack_option:
+        dialogue(story_line, optionSpeed, 0)
 
     # options
     option = chooseOption(2)
@@ -737,14 +737,14 @@ def grenadeOption():
 #################################################### VERGIL ############################################################
 def vergilScene():
     # call functions
-    dialogue(vergilLine1, dialogueSpeed, pauseDialogue)
-    dialogue(vergilLine2, dialogueSpeed, pauseTransition)
+    dialogue(lines.vergil_line_1, dialogueSpeed, pauseDialogue)
+    dialogue(lines.vergil_line_2, dialogueSpeed, pauseTransition)
     vergilOption()
 
 def vergilOption():
     # call functions
-    for line in vergilOptions:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.vergil_option:
+        dialogue(story_line, optionSpeed, 0)
 
     # options
     option = chooseOption(2)
@@ -753,15 +753,15 @@ def vergilOption():
         clear()
         endingVergil()
     elif option == 2:
-        dialogue(vergilLine3, dialogueSpeed, pauseDialogue)
+        dialogue(lines.vergil_line_3, dialogueSpeed, pauseDialogue)
         pygame.mixer.music.unpause()
         footsteps.play()
-        dialogue(vergilLine4, dialogueSpeed, pauseTransition)
+        dialogue(lines.vergil_line_4, dialogueSpeed, pauseTransition)
         clear()
         yardScene()
     else:
         clear()
-        dialogue(optionError, dialogueSpeed, pauseTransition)
+        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         vergilOption()
 
 #################################################### ENDINGS ###########################################################
@@ -769,7 +769,7 @@ def exitScene():
     if "itemGrenade" in inventory:
         clear()
         pygame.mixer.music.pause()
-        dialogue(falseEnding, dialogueSpeed, pauseTransition)
+        dialogue(lines.ending_false, dialogueSpeed, pauseTransition)
         clear()
         pygame.mixer.music.unpause()
         entryScene()
@@ -777,96 +777,96 @@ def exitScene():
         if "itemHomework" in inventory:
             pygame.mixer.music.load(os.path.join(folder, 'normal_ending.mp3'))
             pygame.mixer.music.play(-1)
-            dialogue(endingFreed1, dialogueSpeed, pauseDialogue)
+            dialogue(lines.ending_freed_1, dialogueSpeed, pauseDialogue)
             footsteps.play()
-            dialogue(endingFreed2, dialogueSpeed, pauseDialogue)
-            dialogue(endingFreed3, endingSpeed, pauseTransition)
-            if "endingFreed" not in endings:
-                endings.append("endingFreed")
+            dialogue(lines.ending_freed_2, dialogueSpeed, pauseDialogue)
+            dialogue(lines.ending_freed_3, endingSpeed, pauseTransition)
+            if "ending_freed" not in lines.endings:
+                lines.endings.append("ending_freed")
         else:
             pygame.mixer.music.stop()
-            dialogue(endingLied1, dotSpeed, pauseTransition)
+            dialogue(lines.ending_lied_1, dotSpeed, pauseTransition)
             pygame.mixer.music.load(os.path.join(folder, 'off_ending.mp3'))
             pygame.mixer.music.play(-1)
-            dialogue(endingLied2, dialogueSpeed, pauseDialogue)
+            dialogue(lines.ending_lied_2, dialogueSpeed, pauseDialogue)
             running.play()
-            dialogue(endingLied3, dialogueSpeed, pauseDialogue)
-            dialogue(endingLied4, endingSpeed, pauseTransition)
-            if "endingLied" not in endings:
-                endings.append("endingLied")
+            dialogue(lines.ending_lied_3, dialogueSpeed, pauseDialogue)
+            dialogue(lines.ending_lied_4, endingSpeed, pauseTransition)
+            if "ending_lied" not in lines.endings:
+                lines.endings.append("ending_lied")
 
 def endingUrgent():
     pygame.mixer.music.stop()
-    dialogue(endingUrgent1, dialogueSpeed, pauseDialogue)
-    dialogue(endingUrgent2, dialogueSpeed, pauseDialogue)
-    dialogue(endingUrgent3, endingSpeed, pauseTransition)
-    if "endingUrgent" not in endings:
-        endings.append(endingUrgent)
+    dialogue(lines.ending_urgent_1, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_urgent_2, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_urgent_3, endingSpeed, pauseTransition)
+    if "ending_urgent" not in lines.endings:
+        lines.endings.append("ending_urgent")
 
 def endingRed():
     door_creak.play()
-    dialogue(endingRed1, dialogueSpeed, pauseTransition)
+    dialogue(lines.ending_red_1, dialogueSpeed, pauseTransition)
     slash.play()
     pygame.mixer.music.load(os.path.join(folder, 'dead_theme.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(endingRed2, dialogueSpeed, pauseTransition)
-    dialogue(endingRed3, dialogueSpeed, pauseTransition)
-    dialogue(endingRed4, dialogueSpeed, pauseTransition)
-    dialogue(endingRed5, endingSpeed, pauseTransition)
-    if "endingRed" not in endings:
-        endings.append(endingRed)
+    dialogue(lines.ending_red_1, dialogueSpeed, pauseTransition)
+    dialogue(lines.ending_red_3, dialogueSpeed, pauseTransition)
+    dialogue(lines.ending_red_4, dialogueSpeed, pauseTransition)
+    dialogue(lines.ending_red_5, endingSpeed, pauseTransition)
+    if "ending_red" not in lines.endings:
+        lines.endings.append("ending_red")
 
 def endingBlue():
     door_creak.play()
-    dialogue(endingBlue1, dialogueSpeed, pauseTransition)
+    dialogue(lines.ending_blue_1, dialogueSpeed, pauseTransition)
     gasp.play()
     pygame.mixer.music.load(os.path.join(folder, 'dead_theme.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(endingBlue2, dialogueSpeed, pauseDialogue)
-    dialogue(endingBlue3, dialogueSpeed, pauseDialogue)
-    dialogue(endingBlue4, dialogueSpeed, pauseDialogue)
-    dialogue(endingBlue5, endingSpeed, pauseTransition)
-    if "endingBlue" not in endings:
-        endings.append(endingBlue)
+    dialogue(lines.ending_blue_2, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_blue_3, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_blue_4, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_blue_5, endingSpeed, pauseTransition)
+    if "ending_blue" not in lines.endings:
+        lines.endings.append("ending_blue")
 
 def endingEscaped():
     pygame.mixer.music.stop()
-    dialogue(endingEscaped1, dotSpeed, pauseTransition)
-    dialogue(endingEscaped2, dialogueSpeed, pauseTransition)
+    dialogue(lines.ending_escaped_1, dotSpeed, pauseTransition)
+    dialogue(lines.ending_escaped_2, dialogueSpeed, pauseTransition)
     running.play()
     heartbeat.play(loops=3)
-    dialogue(endingEscaped3, dialogueSpeed, pauseDialogue)
-    dialogue(endingEscaped4, dialogueSpeed, pauseDialogue)
-    dialogue(endingEscaped5, endingSpeed, pauseTransition)
-    if "endingEscaped" not in endings:
-        endings.append(endingEscaped)
+    dialogue(lines.ending_escaped_3, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_escaped_4, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_escaped_5, endingSpeed, pauseTransition)
+    if "ending_escaped" not in lines.endings:
+        lines.endings.append("ending_escaped")
 
 def endingCinema():
     pygame.mixer.music.stop()
-    dialogue(endingCinema1, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_cinema_1, dialogueSpeed, pauseDialogue)
     grenade.play()
-    dialogue(endingCinema2, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_cinema_2, dialogueSpeed, pauseDialogue)
     pygame.mixer.music.load(os.path.join(folder, 'POWER.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(endingCinema3, dialogueSpeed, pauseDialogue)
-    dialogue(endingCinema4, dialogueSpeed, pauseDialogue)
-    dialogue(endingCinema5, dialogueSpeed, pauseDialogue)
-    dialogue(endingCinema6, endingSpeed, pauseTransition)
-    if "endingCinema" not in endings:
-        endings.append(endingCinema)
+    dialogue(lines.ending_cinema_3, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_cinema_4, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_cinema_5, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_cinema_6, endingSpeed, pauseTransition)
+    if "ending_cinema" not in lines.endings:
+        lines.endings.append("ending_cinema")
 
 def endingVergil():
-    dialogue(endingVergil1, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_vergil_1, dialogueSpeed, pauseDialogue)
     pygame.mixer.music.load(os.path.join(folder, 'POWER.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(endingVergil2, dialogueSpeed, pauseDialogue)
-    dialogue(endingVergil3, dialogueSpeed, pauseDialogue)
-    dialogue(endingVergil4, dialogueSpeed, pauseDialogue)
-    dialogue(endingVergil5, endingSpeed, pauseTransition)
-    if "endingVergil" not in endings:
-        endings.append(endingVergil)
+    dialogue(lines.ending_vergil_2, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_vergil_3, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_vergil_4, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_vergil_5, endingSpeed, pauseTransition)
+    if "ending_vergil" not in lines.endings:
+        lines.endings.append("ending_vergil")
 
-################################################# MAIN GAME LOOP #######################################################
+
 while True:
     if gameRunning:
         pygame.mixer.music.stop()
@@ -875,16 +875,12 @@ while True:
         gameExplanation()
         gameRunning = True
 
-    # call function
-    for line in replayLines:
-        dialogue(line, dialogueSpeed, 0)
-
     # reset
     inventory.clear()
     allowEscape = False
     largeBox = ["itemRubberDuck", "itemChewedHomework", "itemFreshCake", "itemGrenade"]
 
-    # store as replay
+    dialogue(lines.replay_line, dialogueSpeed, 0)
     replay = input("\n   ")
     replay = replay.upper()
     time.sleep(pauseTransition)
@@ -897,14 +893,14 @@ while True:
         break
     else:
         clear()
-        dialogue(replayError, dialogueSpeed, pauseTransition)
+        dialogue(lines.replay_error, dialogueSpeed, pauseTransition)
         break
 
 #################################################### QUIT GAME #########################################################
 # call functions
 clear()
-dialogue(quitLine1, dialogueSpeed, pauseDialogue)
-dialogue(quitLine2, dialogueSpeed, pauseTransition)
+dialogue(lines.quit_line_1, dialogueSpeed, pauseDialogue)
+dialogue(lines.quit_line_2, dialogueSpeed, pauseTransition)
 
 # quit
 clear()
