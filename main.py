@@ -32,17 +32,20 @@ slash = pygame.mixer.Sound(os.path.join(folder, "slash.wav"))
 success = pygame.mixer.Sound(os.path.join(folder, "success.wav"))
 zip_up = pygame.mixer.Sound(os.path.join(folder, "zip_up.wav"))
 
-# some variables
+# constants
+DIALOGUE_SPEED = 0.04
+ENDING_SPEED = 0.06
+DOT_SPEED = 0.6
+OPTION_SPEED = 0.01
+PAUSE_DIALOGUE = 0.5
+PAUSE_TRANSITION = 1
+
+# variables
 weights = [35, 35, 10, 20]
-dialogueSpeed = 0.04
-endingSpeed = 0.06
-dotSpeed = 0.6
-optionSpeed = 0.01
-pauseDialogue = 0.5
-pauseTransition = 1
 inventory = []
-largeBox = ["itemRubberDuck", "itemChewedHomework", "itemFreshCake", "itemGrenade"]
-gameRunning = False
+large_box = ["item_rubber_duck", "item_chewed_homework", "item_fresh_cake", "item_grenade"]
+game_running = False
+timer_running = False
 
 
 # set text behaviour
@@ -60,11 +63,11 @@ def clear():
 
 
 # set up options
-def chooseOption(numberOfOptions):  # teacher supplied
+def choose_option(number_of_options):  # teacher supplied
     option = 0
-    while option < 1 or option > numberOfOptions:
-        askOption = "\n   1 to " + str(numberOfOptions) + " -> "
-        dialogue(askOption, dialogueSpeed, 0)
+    while option < 1 or option > number_of_options:
+        ask_option = "\n   1 to " + str(number_of_options) + " -> "
+        dialogue(ask_option, DIALOGUE_SPEED, 0)
 
         option = input()
         if option != '1' and option != '2' and option != '3' and option != '4' and option != '5' and option != '6':
@@ -73,834 +76,856 @@ def chooseOption(numberOfOptions):  # teacher supplied
             option = int(option)
         return option
 
-def gameExplanation():
+
+def game_explanation():
 
     clear()
-    dialogue(lines.expl_line_1, dialogueSpeed, pauseDialogue)
-    dialogue(lines.expl_line_2, dialogueSpeed, pauseDialogue)
-    dialogue(lines.expl_line_3, dialogueSpeed, pauseDialogue)
-    skipIntro()
+    dialogue(lines.expl_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.expl_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.expl_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    skip_intro()
 
-def skipIntro():
+
+def skip_intro():
     # call function
-    dialogue(lines.skip_line, dialogueSpeed, 0)
+    dialogue(lines.skip_line, DIALOGUE_SPEED, 0)
 
     # store as skip
     skip = input("\n   ")
-    skip = skip.upper()
-    time.sleep(pauseTransition)
+    time.sleep(PAUSE_TRANSITION)
 
     # jump scene
-    if skip == "N" or skip == "NO":
+    if skip.upper() == "N" or skip.upper() == "NO":
         clear()
-        introScene()
-    elif skip == "Y" or skip == "YES":
+        intro_scene()
+    elif skip.upper() == "Y" or skip.upper() == "YES":
         clear()
-        entryScene()
+        entry_scene()
     else:
         clear()
-        dialogue(lines.skip_error, dialogueSpeed, pauseTransition)
-        skipIntro()
+        dialogue(lines.skip_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        skip_intro()
 
-def introScene():
+
+def intro_scene():
     pygame.mixer.music.load(os.path.join(folder, 'intro_theme.mp3'))
     pygame.mixer.music.play(-1)
 
     # call functions
     footsteps.play()
-    dialogue(lines.intro_line_1, dialogueSpeed, pauseDialogue)
-    dialogue(lines.intro_line_2, dialogueSpeed, pauseDialogue)
-    dialogue(lines.intro_line_3, dialogueSpeed, pauseDialogue)
-    dialogue(lines.intro_line_4, dialogueSpeed, pauseDialogue)
-    dialogue(lines.intro_line_5, dialogueSpeed, pauseDialogue)
-    dialogue(lines.intro_line_6, dialogueSpeed, pauseDialogue)
+    dialogue(lines.intro_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.intro_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.intro_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.intro_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.intro_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.intro_line_6, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     footsteps.play()
-    dialogue(lines.intro_line_7, dialogueSpeed, pauseTransition)
+    dialogue(lines.intro_line_7, DIALOGUE_SPEED, PAUSE_TRANSITION)
 
     # jump scene
     clear()
-    entryScene()
+    entry_scene()
 
-def entryScene():
+
+def entry_scene():
     pygame.mixer.music.load(os.path.join(folder, 'main_theme.mp3'))
     pygame.mixer.music.play(-1)
 
     # call functions
-    dialogue(lines.entry_line_1, dialogueSpeed, pauseTransition)
-    entryOption()
+    dialogue(lines.entry_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    entry_option()
 
-def entryOption():
+
+def entry_option():
     # call functions
-    for line in lines.entry_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.entry_option:
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(3)
-    time.sleep(pauseTransition)
+    option = choose_option(3)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
         footsteps.play()
-        dialogue(lines.entry_line_2, dialogueSpeed, pauseTransition)
+        dialogue(lines.entry_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        schoolScene()
+        school_scene()
     elif option == 2:
         footsteps.play()
-        dialogue(lines.entry_line_2, dialogueSpeed, pauseTransition)
+        dialogue(lines.entry_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        yardScene()
+        yard_scene()
     elif option == 3:
         clear()
-        exitScene()
+        exit_scene()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        entryOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        entry_option()
 
-def schoolScene():
+
+def school_scene():
     # call functions
     door_creak.play()
-    dialogue(lines.school_line_1, dialogueSpeed, pauseTransition)
-    schoolOption()
+    dialogue(lines.school_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    school_option()
 
-def schoolOption():
+
+def school_option():
     # call functions
-    for line in lines.school_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.school_option:
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(6)
-    time.sleep(pauseTransition)
+    option = choose_option(6)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
         clear()
-        classScene()
+        class_scene()
     elif option == 2:
         clear()
-        staffScene()
+        staff_scene()
     elif option == 3:
         clear()
-        lockerScene()
+        locker_scene()
     elif option == 4:
         clear()
-        yardScene()
+        yard_scene()
     elif option == 5:
         clear()
-        entryScene()
+        entry_scene()
     elif option == 6:
-        dialogue(lines.school_line_2, dialogueSpeed, pauseDialogue)
+        dialogue(lines.school_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         footsteps.play()
-        dialogue(lines.school_line_3, dialogueSpeed, pauseTransition)
+        dialogue(lines.school_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        bathroomScene()
+        bathroom_scene()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        schoolOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        school_option()
 
-################################################### CLASS ##############################################################
-def classScene():
+
+def class_scene():
     # call functions
     door_open.play()
-    dialogue(lines.class_line_1, dialogueSpeed, pauseTransition)
-    classOption()
+    dialogue(lines.class_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    class_option()
 
-def classOption():
-    if "itemStaffKeycard" in inventory:
+
+def class_option():
+    if "item_staff_key_card" in inventory:
         lines.class_option.pop()
 
     # call function
-    for line in lines.class_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.class_option:
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(len(lines.class_option))
-    time.sleep(pauseTransition)
+    option = choose_option(len(lines.class_option))
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
         paper.play()
-        dialogue(lines.class_line_2, dialogueSpeed, pauseDialogue)
-        dialogue(lines.class_line_3, dialogueSpeed, pauseDialogue)
+        dialogue(lines.class_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.class_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         calendar.play()
-        dialogue(lines.class_line_4, dialogueSpeed, pauseTransition)
+        dialogue(lines.class_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        classOption()
+        class_option()
     elif option == 2:
-        dialogue(lines.class_line_5, dialogueSpeed, pauseTransition)
-        dialogue(lines.class_line_6, dotSpeed, pauseTransition)
-        dialogue(lines.class_line_7, dialogueSpeed, 3)
-        dialogue(lines.class_line_8, dialogueSpeed, pauseTransition)
+        dialogue(lines.class_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.class_line_6, DOT_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.class_line_7, DIALOGUE_SPEED, 3)
+        dialogue(lines.class_line_8, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        classOption()
+        class_option()
     elif option == 3:
         clear()
-        schoolScene()
+        school_scene()
     elif option == 4:
-        dialogue(lines.class_line_9, dialogueSpeed, pauseDialogue)
+        dialogue(lines.class_line_9, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         paper.play()
-        dialogue(lines.class_line_10, dialogueSpeed, pauseDialogue)
+        dialogue(lines.class_line_10, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         box.play()
-        dialogue(lines.class_line_11, dialogueSpeed, pauseTransition)
-        keycardOption()
+        dialogue(lines.class_line_11, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        key_card_option()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        classOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        class_option()
 
-def keycardOption():
+
+def key_card_option():
     # call function
-    for line in lines.key_card_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.key_card_option:
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(2)
-    time.sleep(pauseTransition)
+    option = choose_option(2)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
-        dialogue(lines.key_card_line_1, dialogueSpeed, pauseDialogue)
+        dialogue(lines.key_card_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         zip_up.play()
-        dialogue(lines.key_card_line_2, dialogueSpeed, pauseDialogue)
+        dialogue(lines.key_card_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         success.play()
-        dialogue(lines.key_card_line_3, dialogueSpeed, pauseTransition)
-        inventory.append("itemStaffKeycard")
+        dialogue(lines.key_card_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        inventory.append("item_staff_key_card")
         clear()
-        classOption()
+        class_option()
     elif option == 2:
-        dialogue(lines.key_card_line_4, dialogueSpeed, pauseDialogue)
+        dialogue(lines.key_card_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         zip_up.play()
-        dialogue(lines.key_card_line_5, dialogueSpeed, pauseTransition)
+        dialogue(lines.key_card_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        classOption()
+        class_option()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        keycardOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        key_card_option()
 
-################################################### STAFF ##############################################################
-def staffScene():
+
+def staff_scene():
     # call functions
-    dialogue(lines.staff_line_1, dialogueSpeed, pauseDialogue)
-    dialogue(lines.staff_line_2, dialogueSpeed, pauseTransition)
-    staffOption()
+    dialogue(lines.staff_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.staff_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    staff_option()
 
-def staffOption():
+
+def staff_option():
     # call functions
     for story_line in lines.staff_option:
-        dialogue(story_line, optionSpeed, 0)
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(2)
+    option = choose_option(2)
     print("")
-    time.sleep(pauseTransition)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
-        if "itemStaffKeycard" in inventory:
+        if "item_staff_key_card" in inventory:
             door_locked.play()
-            dialogue(lines.staff_line_3, dotSpeed, pauseTransition)
-            dialogue(lines.staff_line_4, dialogueSpeed, pauseTransition)
+            dialogue(lines.staff_line_3, DOT_SPEED, PAUSE_TRANSITION)
+            dialogue(lines.staff_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
             door_open.play()
-            dialogue(lines.staff_line_5, dialogueSpeed, pauseDialogue)
-            dialogue(lines.staff_line_6, dialogueSpeed, pauseTransition)
-            cubicleOption()
+            dialogue(lines.staff_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.staff_line_6, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            cubicle_option()
         else:
             door_locked.play()
-            dialogue(lines.staff_line_3, dotSpeed, pauseTransition)
-            dialogue(lines.staff_line_4, dialogueSpeed, pauseTransition)
+            dialogue(lines.staff_line_3, DOT_SPEED, PAUSE_TRANSITION)
+            dialogue(lines.staff_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
             clear()
-            staffOption()
+            staff_option()
     elif option == 2:
         footsteps.play()
-        dialogue(lines.staff_line_7, dialogueSpeed, pauseTransition)
+        dialogue(lines.staff_line_7, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        schoolScene()
+        school_scene()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        staffOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        staff_option()
 
-def cubicleOption():
+
+def cubicle_option():
     # call functions
     for story_line in lines.cubicle_option:
-        dialogue(story_line, optionSpeed, 0)
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(4)
-    time.sleep(pauseTransition)
+    option = choose_option(4)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
-        dialogue(lines.cubicle_line_1, dialogueSpeed, pauseDialogue)
-        time.sleep(pauseTransition)
-        dialogue(lines.cubicle_line_2, dialogueSpeed, pauseDialogue)
-        dialogue(lines.cubicle_line_3, dialogueSpeed, pauseTransition)
-        hackOption()
+        dialogue(lines.cubicle_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        time.sleep(PAUSE_TRANSITION)
+        dialogue(lines.cubicle_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.cubicle_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        hack_option()
     elif option == 2:
         calendar.play()
-        dialogue(lines.cubicle_line_4, dialogueSpeed, pauseDialogue)
-        dialogue(lines.cubicle_line_5, dialogueSpeed, pauseTransition)
+        dialogue(lines.cubicle_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.cubicle_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        cubicleOption()
+        cubicle_option()
     elif option == 3:
         paper.play()
-        dialogue(lines.cubicle_line_6, dialogueSpeed, pauseDialogue)
+        dialogue(lines.cubicle_line_6, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         calendar.play()
-        dialogue(lines.cubicle_line_7, dialogueSpeed, pauseDialogue)
-        dialogue(lines.cubicle_line_8, endingSpeed, pauseTransition)
-        dialogue(lines.cubicle_line_9, dialogueSpeed, pauseDialogue)
-        dialogue(lines.cubicle_line_10, dialogueSpeed, pauseDialogue)
-        dialogue(lines.cubicle_line_11, dialogueSpeed, pauseDialogue)
+        dialogue(lines.cubicle_line_7, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.cubicle_line_8, ENDING_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.cubicle_line_9, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.cubicle_line_10, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.cubicle_line_11, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         paper.play()
-        dialogue(lines.cubicle_line_12, dialogueSpeed, pauseTransition)
+        dialogue(lines.cubicle_line_12, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        cubicleOption()
+        cubicle_option()
     elif option == 4:
-        dialogue(lines.cubicle_line_13, dialogueSpeed, pauseDialogue)
+        dialogue(lines.cubicle_line_13, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         door_close.play()
-        dialogue(lines.cubicle_line_14, dialogueSpeed, pauseTransition)
+        dialogue(lines.cubicle_line_14, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        schoolScene()
+        school_scene()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        cubicleOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        cubicle_option()
 
-def hackOption():
+
+def hack_option():
     # call functions
     for story_line in lines.hack_option:
-        dialogue(story_line, optionSpeed, 0)
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(2)
-    time.sleep(pauseTransition)
+    option = choose_option(2)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
-        dialogue(lines.hack_line_1, dialogueSpeed, pauseTransition)
-        askPassword = "Password: \n"
-        dialogue(askPassword, dialogueSpeed, 0)
-        enteredPassword = input("   ")
-        time.sleep(pauseTransition)
-        if enteredPassword == "8970":
+        dialogue(lines.hack_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        ask_pin = "Password: \n"
+        dialogue(ask_pin, DIALOGUE_SPEED, 0)
+        entered_pin = input("   ")
+        time.sleep(PAUSE_TRANSITION)
+        if entered_pin == "8970":
             success.play()
-            dialogue(lines.hack_line_2, dialogueSpeed, pauseDialogue)
-            dialogue(lines.hack_line_3, dialogueSpeed, pauseDialogue)
-            time.sleep(pauseTransition)
-            dialogue(lines.hack_line_4, dialogueSpeed, pauseDialogue)
-            dialogue(lines.hack_line_5, dialogueSpeed, pauseDialogue)
-            dialogue(lines.hack_line_6, dialogueSpeed, pauseDialogue)
-            dialogue(lines.hack_line_7, dialogueSpeed, pauseTransition)
-            global allowEscape
-            allowEscape = True
+            dialogue(lines.hack_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.hack_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            time.sleep(PAUSE_TRANSITION)
+            dialogue(lines.hack_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.hack_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.hack_line_6, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.hack_line_7, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            global prompt_escape
+            prompt_escape = True
             clear()
-            cubicleOption()
+            cubicle_option()
         else:
             error.play()
-            dialogue(lines.hack_line_8, dialogueSpeed, pauseDialogue)
-            dialogue(lines.hack_line_9, dialogueSpeed, pauseTransition)
+            dialogue(lines.hack_line_8, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.hack_line_9, DIALOGUE_SPEED, PAUSE_TRANSITION)
             clear()
-            hackOption()
+            hack_option()
     elif option == 2:
-        dialogue(lines.hack_line_10, dialogueSpeed, pauseTransition)
+        dialogue(lines.hack_line_10, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        cubicleOption()
+        cubicle_option()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        hackOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        hack_option()
 
-################################################### LOCKER #############################################################
-def lockerScene():
+
+def locker_scene():
 
     # call functions
-    if "itemHomework" not in inventory:
-        dialogue(lines.locker_line_1, dialogueSpeed, pauseTransition)
+    if "item_homework" not in inventory:
+        dialogue(lines.locker_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        lockerOption()
+        locker_option()
     else:
-        dialogue(lines.locker_line_2, dialogueSpeed, pauseDialogue)
+        dialogue(lines.locker_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         footsteps.play()
-        dialogue(lines.locker_line_3, dialogueSpeed, pauseTransition)
+        dialogue(lines.locker_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        schoolScene()
+        school_scene()
 
-def lockerOption():
+
+def locker_option():
     # call functions
-    for line in lines.locker_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.locker_option:
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(2)
-    time.sleep(pauseTransition)
+    option = choose_option(2)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
-        askPasscode = "\nTurn dials to:   x|x|x|x\n"
-        dialogue(askPasscode, dialogueSpeed, 0)
-        enteredPasscode = input("   ")
-        time.sleep(pauseTransition)
-        if enteredPasscode == "0421":
+        ask_passcode = "\nTurn dials to:   x|x|x|x\n"
+        dialogue(ask_passcode, DIALOGUE_SPEED, 0)
+        entered_passcode = input("   ")
+        time.sleep(PAUSE_TRANSITION)
+        if entered_passcode == "0421":
             locker_open.play()
-            dialogue(lines.locker_line_4, dialogueSpeed, pauseDialogue)
-            dialogue(lines.locker_line_5, dialogueSpeed, pauseDialogue)
-            dialogue(lines.locker_line_6, dialogueSpeed, pauseDialogue)
+            dialogue(lines.locker_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.locker_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.locker_line_6, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             success.play()
-            dialogue(lines.locker_line_7, endingSpeed, pauseDialogue)
-            dialogue(lines.locker_line_8, dialogueSpeed, pauseTransition)
-            dialogue(lines.locker_line_9, dialogueSpeed, pauseTransition)
-            dialogue(lines.locker_line_10, dialogueSpeed, pauseDialogue)
-            dialogue(lines.locker_line_11, dialogueSpeed, pauseDialogue)
+            dialogue(lines.locker_line_7, ENDING_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.locker_line_8, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            dialogue(lines.locker_line_9, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            dialogue(lines.locker_line_10, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.locker_line_11, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             locker_close.play()
-            dialogue(lines.locker_line_12, dialogueSpeed, pauseDialogue)
+            dialogue(lines.locker_line_12, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             success.play()
-            dialogue(lines.locker_line_13, endingSpeed, pauseTransition)
-            inventory.append("itemHomework")
-            inventory.append("itemSmallKey")
+            dialogue(lines.locker_line_13, ENDING_SPEED, PAUSE_TRANSITION)
+            inventory.append("item_homework")
+            inventory.append("item_small_key")
             clear()
-            schoolScene()
+            school_scene()
         else:
             locker_locked.play()
-            dialogue(lines.locker_line_14, dialogueSpeed, pauseTransition)
-            dialogue(lines.locker_line_15, dialogueSpeed, pauseTransition)
+            dialogue(lines.locker_line_14, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            dialogue(lines.locker_line_15, DIALOGUE_SPEED, PAUSE_TRANSITION)
             clear()
-            lockerOption()
+            locker_option()
     elif option == 2:
-        dialogue(lines.locker_line_16, dialogueSpeed, pauseTransition)
+        dialogue(lines.locker_line_16, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        schoolScene()
+        school_scene()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        lockerOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        locker_option()
 
-#################################################### YARD ##############################################################
-def yardScene():
 
-    # call functions
+def yard_scene():
+
     door_creak.play()
-    dialogue(lines.yard_line_1, dialogueSpeed, pauseTransition)
-    yardOption()
+    dialogue(lines.yard_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    yard_option()
 
-def yardOption():
-    if "itemFreshCake" in inventory:
+
+def yard_option():
+    if "ite_fresh_cake" in inventory:
         lines.yard_option.append("   (5) ..What is that in the distance?\n")
 
     # call function
-    for line in lines.yard_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.yard_option:
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(len(lines.yard_option))
-    time.sleep(pauseTransition)
+    option = choose_option(len(lines.yard_option))
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
         clear()
-        schoolScene()
+        school_scene()
     elif option == 2:
-        dialogue(lines.yard_line_2, dialogueSpeed, pauseDialogue)
-        dialogue(lines.yard_line_3, dialogueSpeed, pauseDialogue)
-        dialogue(lines.yard_line_4, dialogueSpeed, pauseTransition)
+        dialogue(lines.yard_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.yard_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.yard_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        yardOption()
+        yard_option()
     elif option == 3:
         clear()
-        hiddenScene()
+        hidden_scene()
     elif option == 4:
         clear()
-        exitScene()
-    elif option == 5 and "itemFreshCake" in inventory:
-        dialogue(lines.yard_line_5, dialogueSpeed, pauseDialogue)
+        exit_scene()
+    elif option == 5 and "item_fresh_cake" in inventory:
+        dialogue(lines.yard_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         pygame.mixer.music.pause()
-        dialogue(lines.yard_line_6, dialogueSpeed, pauseTransition)
+        dialogue(lines.yard_line_6, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        vergilScene()
+        vergil_scene()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        yardOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        yard_option()
 
-################################################### BATHROOM ###########################################################
-def bathroomTimer():
-    totalSeconds = 5
-    while totalSeconds > 0 and timerRunning:
+
+def bathroom_timer():
+    total_seconds = 5
+    while total_seconds > 0 and timer_running:
         time.sleep(1)
-        totalSeconds -= 1
-    if totalSeconds == 0 and timerRunning:
+        total_seconds -= 1
+    if total_seconds == 0 and timer_running:
         clear()
-        endingUrgent()
+        ending_urgent()
 
-def bathroomScene():
+
+def bathroom_scene():
 
     # call functions
     pygame.mixer.music.stop()
     door_creak.play()
-    dialogue(lines.bathroom_line_1, dialogueSpeed, pauseDialogue)
-    dialogue(lines.bathroom_line_2, dialogueSpeed, pauseDialogue)
-    dialogue(lines.bathroom_line_3, dotSpeed, pauseTransition)
-    dialogue(lines.bathroom_line_4, dialogueSpeed, pauseTransition)
+    dialogue(lines.bathroom_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.bathroom_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.bathroom_line_3, DOT_SPEED, PAUSE_TRANSITION)
+    dialogue(lines.bathroom_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
     pygame.mixer.music.load(os.path.join(folder, 'silly_theme.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(lines.bathroom_line_5, dialogueSpeed, pauseDialogue)
-    dialogue(lines.bathroom_line_6, dialogueSpeed, pauseTransition)
-    bathroomOption()
+    dialogue(lines.bathroom_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.bathroom_line_6, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    bathroom_option()
 
-def bathroomOption():
+
+def bathroom_option():
     # dialogue
-    if "itemGrenade" in inventory:
+    if "item_grenade" in inventory:
         lines.bathroom_option.append("   (3) Destroy everything.\n")
 
     # call functions
-    for line in lines.bathroom_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.bathroom_option:
+        dialogue(story_line, OPTION_SPEED, 0)
 
-    global timerRunning
-    timerRunning = True
-    bathroomThread = threading.Thread(target=bathroomTimer)
-    bathroomThread.start()
+    global timer_running
+    timer_running = True
+    bathroom_thread = threading.Thread(target=bathroom_timer)
+    bathroom_thread.start()
 
     # options
-    option = chooseOption(len(lines.bathroom_option))
-    time.sleep(pauseTransition)
+    option = choose_option(len(lines.bathroom_option))
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
-        timerRunning = False
+        timer_running = False
         pygame.mixer.music.stop()
         running.play()
-        dialogue(lines.bathroom_line_7, dialogueSpeed, pauseTransition)
-        dialogue(lines.bathroom_line_8, dialogueSpeed, pauseTransition)
-        dialogue(lines.bathroom_line_9, dialogueSpeed, pauseTransition)
-        dialogue(lines.bathroom_line_10, endingSpeed, pauseTransition)
-        paperOption()
+        dialogue(lines.bathroom_line_7, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.bathroom_line_8, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.bathroom_line_9, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.bathroom_line_10, ENDING_SPEED, PAUSE_TRANSITION)
+        paper_option()
     elif option == 2:
-        timerRunning = False
-        dialogue(lines.bathroom_line_11, dialogueSpeed, pauseTransition)
+        timer_running = False
+        dialogue(lines.bathroom_line_11, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        timerRunning = True
-        bathroomOption()
-    elif option == 3 and "itemGrenade" in inventory:
-        timerRunning = False
+        timer_running = True
+        bathroom_option()
+    elif option == 3 and "item_grenade" in inventory:
+        timer_running = False
         pygame.mixer.music.stop()
         clear()
-        endingCinema()
+        ending_cinema()
     else:
-        timerRunning = False
+        timer_running = False
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        timerRunning = True
-        bathroomOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        timer_running = True
+        bathroom_option()
 
-def paperOption():
-    if allowEscape:
+
+def paper_option():
+    if prompt_escape:
         lines.paper_option.append("   (3) I don't want any paper.\n")
 
     # call functions
-    for line in lines.paper_option:
+    for story_line in lines.paper_option:
         heartbeat.play(loops=3)
-        dialogue(line, optionSpeed, 0)
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(len(lines.paper_option))
-    time.sleep(pauseTransition)
+    option = choose_option(len(lines.paper_option))
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
         clear()
-        endingRed()
+        ending_red()
     elif option == 2:
         clear()
-        endingBlue()
-    elif option == 3 and allowEscape:
+        ending_blue()
+    elif option == 3 and prompt_escape:
         clear()
-        endingEscaped()
+        ending_escaped()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        paperOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        paper_option()
 
-#################################################### HIDDEN ############################################################
-def hiddenScene():
+
+def hidden_scene():
     # call functions
-    if 'itemFreshCake' or 'itemGrenade' in inventory:
-        dialogue(lines.hidden_line_2, dialogueSpeed, pauseDialogue)
+    if 'item_fresh_cake' or 'item_grenade' in inventory:
+        dialogue(lines.hidden_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         footsteps.play()
-        dialogue(lines.hidden_line_3, dialogueSpeed, pauseTransition)
+        dialogue(lines.hidden_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        yardScene()
+        yard_scene()
     else:
         footsteps.play()
-        dialogue(lines.hidden_line_1, dialogueSpeed, pauseTransition)
-        hiddenOption()
+        dialogue(lines.hidden_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        hidden_option()
 
-def hiddenOption():
+
+def hidden_option():
     # call functions
-    for line in lines.hidden_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.hidden_option:
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(2)
+    option = choose_option(2)
     print("")
-    time.sleep(pauseTransition)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
-        if "itemSmallKey" in inventory:
+        if "item_small_key" in inventory:
             door_locked.play()
-            dialogue(lines.hidden_line_4, dotSpeed, pauseTransition)
-            dialogue(lines.hidden_line_5, dialogueSpeed, pauseTransition)
-            dialogue(lines.hidden_line_6, dialogueSpeed, pauseDialogue)
+            dialogue(lines.hidden_line_4, DOT_SPEED, PAUSE_TRANSITION)
+            dialogue(lines.hidden_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            dialogue(lines.hidden_line_6, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             door_open.play()
-            dialogue(lines.hidden_line_7, dialogueSpeed, pauseDialogue)
-            dialogue(lines.hidden_line_8, dialogueSpeed, pauseTransition)
-            boxOption()
+            dialogue(lines.hidden_line_7, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.hidden_line_8, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            box_option()
         else:
             door_locked.play()
-            dialogue(lines.hidden_line_4, dotSpeed, pauseTransition)
-            dialogue(lines.hidden_line_5, dialogueSpeed, pauseTransition)
+            dialogue(lines.hidden_line_4, DOT_SPEED, PAUSE_TRANSITION)
+            dialogue(lines.hidden_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
             clear()
-            hiddenOption()
+            hidden_option()
     elif option == 2:
-        dialogue(lines.hidden_line_9, dialogueSpeed, pauseDialogue)
+        dialogue(lines.hidden_line_9, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         footsteps.play()
-        dialogue(lines.hidden_line_10, dialogueSpeed, pauseTransition)
+        dialogue(lines.hidden_line_10, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        yardScene()
+        yard_scene()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        hiddenOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        hidden_option()
 
-def boxOption():
+
+def box_option():
     # call functions
-    for line in lines.box_option:
-        dialogue(line, optionSpeed, 0)
+    for story_line in lines.box_option:
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(2)
-    time.sleep(pauseTransition)
+    option = choose_option(2)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
         box.play()
-        dialogue(lines.box_line_1, dialogueSpeed, pauseTransition)
-        retrievedItem = random.choices(largeBox, weights=weights, k=1)[0]
-        if retrievedItem == "itemRubberDuck":
-            dialogue(lines.box_line_2, dialogueSpeed, pauseDialogue)
-            dialogue(lines.box_line_3, dialogueSpeed, pauseTransition)
+        dialogue(lines.box_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        retrieved_item = random.choices(large_box, weights=weights, k=1)[0]
+        if retrieved_item == "item_rubber_duck":
+            dialogue(lines.box_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.box_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
             weights.remove(35)
-            largeBox.remove("itemRubberDuck")
+            large_box.remove("item_rubber_duck")
             clear()
-            boxOption()
-        elif retrievedItem == "itemChewedHomework":
-            dialogue(lines.box_line_4, dialogueSpeed, pauseDialogue)
-            dialogue(lines.box_line_5, dialogueSpeed, pauseTransition)
+            box_option()
+        elif retrieved_item == "itemChewedHomework":
+            dialogue(lines.box_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.box_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
             weights.remove(35)
-            largeBox.remove("itemChewedHomework")
+            large_box.remove("itemChewedHomework")
             clear()
-            boxOption()
-        elif retrievedItem == "itemFreshCake":
-            dialogue(lines.box_line_6, dialogueSpeed, pauseDialogue)
-            dialogue(lines.box_line_7, dialogueSpeed, pauseDialogue)
+            box_option()
+        elif retrieved_item == "itemFreshCake":
+            dialogue(lines.box_line_6, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.box_line_7, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             zip_up.play()
-            dialogue(lines.box_line_8, dialogueSpeed, pauseDialogue)
+            dialogue(lines.box_line_8, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             success.play()
-            dialogue(lines.box_line_9, dialogueSpeed, pauseDialogue)
-            dialogue(lines.box_line_10, dialogueSpeed, pauseDialogue)
+            dialogue(lines.box_line_9, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.box_line_10, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             footsteps.play()
-            dialogue(lines.box_line_11, dialogueSpeed, pauseTransition)
+            dialogue(lines.box_line_11, DIALOGUE_SPEED, PAUSE_TRANSITION)
             inventory.append("itemFreshCake")
             clear()
-            yardScene()
+            yard_scene()
         else:
-            dialogue(lines.box_line_12, dialogueSpeed, pauseDialogue)
-            dialogue(lines.box_line_13, dialogueSpeed, pauseTransition)
+            dialogue(lines.box_line_12, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.box_line_13, DIALOGUE_SPEED, PAUSE_TRANSITION)
             clear()
-            grenadeOption()
+            grenade_option()
     elif option == 2:
-        dialogue(lines.box_line_14, dialogueSpeed, pauseDialogue)
+        dialogue(lines.box_line_14, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         door_close.play()
-        dialogue(lines.box_line_15, dialogueSpeed, pauseTransition)
+        dialogue(lines.box_line_15, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        yardScene()
+        yard_scene()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        boxOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        box_option()
 
-def grenadeOption():
 
-    # call functions
-    for line in lines.grenade_option:
-        dialogue(line, optionSpeed, 0)
+def grenade_option():
+    for story_line in lines.grenade_option:
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(2)
-    time.sleep(pauseTransition)
+    option = choose_option(2)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
-        dialogue(lines.grenade_line_1, dialogueSpeed, pauseDialogue)
+        dialogue(lines.grenade_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         success.play()
-        dialogue(lines.grenade_line_2, endingSpeed, pauseDialogue)
+        dialogue(lines.grenade_line_2, ENDING_SPEED, PAUSE_DIALOGUE)
         door_close.play()
-        dialogue(lines.grenade_line_3, dialogueSpeed, pauseTransition)
+        dialogue(lines.grenade_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
         inventory.append("itemGrenade")
         clear()
-        yardScene()
+        yard_scene()
     elif option == 2:
-        dialogue(lines.grenade_line_4, dialogueSpeed, pauseTransition)
+        dialogue(lines.grenade_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         weights.remove(20)
-        largeBox.remove("itemGrenade")
-        boxOption()
+        large_box.remove("itemGrenade")
+        box_option()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        grenadeOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        grenade_option()
 
-#################################################### VERGIL ############################################################
-def vergilScene():
+
+def vergil_scene():
     # call functions
-    dialogue(lines.vergil_line_1, dialogueSpeed, pauseDialogue)
-    dialogue(lines.vergil_line_2, dialogueSpeed, pauseTransition)
-    vergilOption()
+    dialogue(lines.vergil_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.vergil_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    vergil_option()
 
-def vergilOption():
+
+def vergil_option():
     # call functions
     for story_line in lines.vergil_option:
-        dialogue(story_line, optionSpeed, 0)
+        dialogue(story_line, OPTION_SPEED, 0)
 
     # options
-    option = chooseOption(2)
-    time.sleep(pauseTransition)
+    option = choose_option(2)
+    time.sleep(PAUSE_TRANSITION)
     if option == 1:
         clear()
-        endingVergil()
+        ending_vergil()
     elif option == 2:
-        dialogue(lines.vergil_line_3, dialogueSpeed, pauseDialogue)
+        dialogue(lines.vergil_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         pygame.mixer.music.unpause()
         footsteps.play()
-        dialogue(lines.vergil_line_4, dialogueSpeed, pauseTransition)
+        dialogue(lines.vergil_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        yardScene()
+        yard_scene()
     else:
         clear()
-        dialogue(lines.option_error, dialogueSpeed, pauseTransition)
-        vergilOption()
+        dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        vergil_option()
 
-#################################################### ENDINGS ###########################################################
-def exitScene():
+
+def exit_scene():
     if "itemGrenade" in inventory:
         clear()
         pygame.mixer.music.pause()
-        dialogue(lines.ending_false, dialogueSpeed, pauseTransition)
+        dialogue(lines.ending_false, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         pygame.mixer.music.unpause()
-        entryScene()
+        entry_scene()
     else:
         if "itemHomework" in inventory:
             pygame.mixer.music.load(os.path.join(folder, 'normal_ending.mp3'))
             pygame.mixer.music.play(-1)
-            dialogue(lines.ending_freed_1, dialogueSpeed, pauseDialogue)
+            dialogue(lines.ending_freed_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             footsteps.play()
-            dialogue(lines.ending_freed_2, dialogueSpeed, pauseDialogue)
-            dialogue(lines.ending_freed_3, endingSpeed, pauseTransition)
+            dialogue(lines.ending_freed_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.ending_freed_3, ENDING_SPEED, PAUSE_TRANSITION)
             if "ending_freed" not in lines.endings:
                 lines.endings.append("ending_freed")
         else:
             pygame.mixer.music.stop()
-            dialogue(lines.ending_lied_1, dotSpeed, pauseTransition)
+            dialogue(lines.ending_lied_1, DOT_SPEED, PAUSE_TRANSITION)
             pygame.mixer.music.load(os.path.join(folder, 'off_ending.mp3'))
             pygame.mixer.music.play(-1)
-            dialogue(lines.ending_lied_2, dialogueSpeed, pauseDialogue)
+            dialogue(lines.ending_lied_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             running.play()
-            dialogue(lines.ending_lied_3, dialogueSpeed, pauseDialogue)
-            dialogue(lines.ending_lied_4, endingSpeed, pauseTransition)
+            dialogue(lines.ending_lied_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.ending_lied_4, ENDING_SPEED, PAUSE_TRANSITION)
             if "ending_lied" not in lines.endings:
                 lines.endings.append("ending_lied")
 
-def endingUrgent():
+
+def ending_urgent():
     pygame.mixer.music.stop()
-    dialogue(lines.ending_urgent_1, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_urgent_2, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_urgent_3, endingSpeed, pauseTransition)
+    dialogue(lines.ending_urgent_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_urgent_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_urgent_3, ENDING_SPEED, PAUSE_TRANSITION)
     if "ending_urgent" not in lines.endings:
         lines.endings.append("ending_urgent")
 
-def endingRed():
+
+def ending_red():
     door_creak.play()
-    dialogue(lines.ending_red_1, dialogueSpeed, pauseTransition)
+    dialogue(lines.ending_red_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
     slash.play()
     pygame.mixer.music.load(os.path.join(folder, 'dead_theme.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(lines.ending_red_1, dialogueSpeed, pauseTransition)
-    dialogue(lines.ending_red_3, dialogueSpeed, pauseTransition)
-    dialogue(lines.ending_red_4, dialogueSpeed, pauseTransition)
-    dialogue(lines.ending_red_5, endingSpeed, pauseTransition)
+    dialogue(lines.ending_red_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    dialogue(lines.ending_red_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    dialogue(lines.ending_red_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    dialogue(lines.ending_red_5, ENDING_SPEED, PAUSE_TRANSITION)
     if "ending_red" not in lines.endings:
         lines.endings.append("ending_red")
 
-def endingBlue():
+
+def ending_blue():
     door_creak.play()
-    dialogue(lines.ending_blue_1, dialogueSpeed, pauseTransition)
+    dialogue(lines.ending_blue_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
     gasp.play()
     pygame.mixer.music.load(os.path.join(folder, 'dead_theme.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(lines.ending_blue_2, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_blue_3, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_blue_4, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_blue_5, endingSpeed, pauseTransition)
+    dialogue(lines.ending_blue_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_blue_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_blue_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_blue_5, ENDING_SPEED, PAUSE_TRANSITION)
     if "ending_blue" not in lines.endings:
         lines.endings.append("ending_blue")
 
-def endingEscaped():
+
+def ending_escaped():
     pygame.mixer.music.stop()
-    dialogue(lines.ending_escaped_1, dotSpeed, pauseTransition)
-    dialogue(lines.ending_escaped_2, dialogueSpeed, pauseTransition)
+    dialogue(lines.ending_escaped_1, DOT_SPEED, PAUSE_TRANSITION)
+    dialogue(lines.ending_escaped_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
     running.play()
     heartbeat.play(loops=3)
-    dialogue(lines.ending_escaped_3, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_escaped_4, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_escaped_5, endingSpeed, pauseTransition)
+    dialogue(lines.ending_escaped_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_escaped_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_escaped_5, ENDING_SPEED, PAUSE_TRANSITION)
     if "ending_escaped" not in lines.endings:
         lines.endings.append("ending_escaped")
 
-def endingCinema():
+
+def ending_cinema():
     pygame.mixer.music.stop()
-    dialogue(lines.ending_cinema_1, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_cinema_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     grenade.play()
-    dialogue(lines.ending_cinema_2, dialogueSpeed, pauseDialogue)
+    dialogue(lines.ending_cinema_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     pygame.mixer.music.load(os.path.join(folder, 'POWER.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(lines.ending_cinema_3, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_cinema_4, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_cinema_5, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_cinema_6, endingSpeed, pauseTransition)
+    dialogue(lines.ending_cinema_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_cinema_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_cinema_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_cinema_6, ENDING_SPEED, PAUSE_TRANSITION)
     if "ending_cinema" not in lines.endings:
         lines.endings.append("ending_cinema")
 
-def endingVergil():
-    dialogue(lines.ending_vergil_1, dialogueSpeed, pauseDialogue)
+
+def ending_vergil():
+    dialogue(lines.ending_vergil_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     pygame.mixer.music.load(os.path.join(folder, 'POWER.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(lines.ending_vergil_2, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_vergil_3, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_vergil_4, dialogueSpeed, pauseDialogue)
-    dialogue(lines.ending_vergil_5, endingSpeed, pauseTransition)
+    dialogue(lines.ending_vergil_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_vergil_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_vergil_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_vergil_5, ENDING_SPEED, PAUSE_TRANSITION)
     if "ending_vergil" not in lines.endings:
         lines.endings.append("ending_vergil")
 
 
 while True:
-    if gameRunning:
+    if game_running:
         pygame.mixer.music.stop()
-        entryScene()
+        entry_scene()
     else:
-        gameExplanation()
-        gameRunning = True
+        game_explanation()
+        game_running = True
 
     # reset
     inventory.clear()
-    allowEscape = False
-    largeBox = ["itemRubberDuck", "itemChewedHomework", "itemFreshCake", "itemGrenade"]
+    prompt_escape = False
+    weights = [35, 35, 10, 20]
+    large_box = ["item_rubber_duck", "item_chewed_homework", "item_fresh_cake", "item_grenade"]
 
-    dialogue(lines.replay_line, dialogueSpeed, 0)
+    dialogue(lines.replay_line, DIALOGUE_SPEED, 0)
     replay = input("\n   ")
-    replay = replay.upper()
-    time.sleep(pauseTransition)
+    time.sleep(PAUSE_TRANSITION)
 
     # jump scene
-    if replay == "Y" or replay == "YES":
+    if replay.upper() == "Y" or replay.upper() == "YES":
         clear()
         continue
-    elif replay == "N" or replay == "NO":
+    elif replay.upper() == "N" or replay.upper() == "NO":
         break
     else:
         clear()
-        dialogue(lines.replay_error, dialogueSpeed, pauseTransition)
+        dialogue(lines.replay_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
         break
 
-#################################################### QUIT GAME #########################################################
 # call functions
 clear()
-dialogue(lines.quit_line_1, dialogueSpeed, pauseDialogue)
-dialogue(lines.quit_line_2, dialogueSpeed, pauseTransition)
+dialogue(lines.quit_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+dialogue(lines.quit_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
 
 # quit
 clear()
