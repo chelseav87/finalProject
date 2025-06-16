@@ -54,6 +54,11 @@ def dialogue(line, parameterSpeed, parameterPause):
     time.sleep(parameterPause)
 
 
+def clear():
+    if os.name == 'nt':
+        _ = os.system('cls')
+
+
 # set up options
 def chooseOption(numberOfOptions):  # teacher supplied
     option = 0
@@ -70,7 +75,7 @@ def chooseOption(numberOfOptions):  # teacher supplied
 
 def gameExplanation():
 
-    # call functions
+    clear()
     dialogue(lines.expl_line_1, dialogueSpeed, pauseDialogue)
     dialogue(lines.expl_line_2, dialogueSpeed, pauseDialogue)
     dialogue(lines.expl_line_3, dialogueSpeed, pauseDialogue)
@@ -87,10 +92,13 @@ def skipIntro():
 
     # jump scene
     if skip == "N" or skip == "NO":
+        clear()
         introScene()
     elif skip == "Y" or skip == "YES":
+        clear()
         entryScene()
     else:
+        clear()
         dialogue(lines.skip_error, dialogueSpeed, pauseTransition)
         skipIntro()
 
@@ -110,6 +118,7 @@ def introScene():
     dialogue(lines.intro_line_7, dialogueSpeed, pauseTransition)
 
     # jump scene
+    clear()
     entryScene()
 
 def entryScene():
@@ -131,14 +140,18 @@ def entryOption():
     if option == 1:
         footsteps.play()
         dialogue(lines.entry_line_2, dialogueSpeed, pauseTransition)
+        clear()
         schoolScene()
     elif option == 2:
         footsteps.play()
         dialogue(lines.entry_line_2, dialogueSpeed, pauseTransition)
+        clear()
         yardScene()
     elif option == 3:
+        clear()
         exitScene()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         entryOption()
 
@@ -157,21 +170,28 @@ def schoolOption():
     option = chooseOption(6)
     time.sleep(pauseTransition)
     if option == 1:
+        clear()
         classScene()
     elif option == 2:
+        clear()
         staffScene()
     elif option == 3:
+        clear()
         lockerScene()
     elif option == 4:
+        clear()
         yardScene()
     elif option == 5:
+        clear()
         entryScene()
     elif option == 6:
         dialogue(lines.school_line_2, dialogueSpeed, pauseDialogue)
         footsteps.play()
         dialogue(lines.school_line_3, dialogueSpeed, pauseTransition)
+        clear()
         bathroomScene()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         schoolOption()
 
@@ -199,14 +219,17 @@ def classOption():
         dialogue(lines.class_line_3, dialogueSpeed, pauseDialogue)
         calendar.play()
         dialogue(lines.class_line_4, dialogueSpeed, pauseTransition)
+        clear()
         classOption()
     elif option == 2:
         dialogue(lines.class_line_5, dialogueSpeed, pauseTransition)
         dialogue(lines.class_line_6, dotSpeed, pauseTransition)
         dialogue(lines.class_line_7, dialogueSpeed, 3)
         dialogue(lines.class_line_8, dialogueSpeed, pauseTransition)
+        clear()
         classOption()
     elif option == 3:
+        clear()
         schoolScene()
     elif option == 4:
         dialogue(lines.class_line_9, dialogueSpeed, pauseDialogue)
@@ -216,6 +239,7 @@ def classOption():
         dialogue(lines.class_line_11, dialogueSpeed, pauseTransition)
         keycardOption()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         classOption()
 
@@ -234,13 +258,16 @@ def keycardOption():
         success.play()
         dialogue(lines.key_card_line_3, dialogueSpeed, pauseTransition)
         inventory.append("itemStaffKeycard")
+        clear()
         classOption()
     elif option == 2:
         dialogue(lines.key_card_line_4, dialogueSpeed, pauseDialogue)
         zip_up.play()
         dialogue(lines.key_card_line_5, dialogueSpeed, pauseTransition)
+        clear()
         classOption()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         keycardOption()
 
@@ -273,12 +300,15 @@ def staffOption():
             door_locked.play()
             dialogue(lines.staff_line_3, dotSpeed, pauseTransition)
             dialogue(lines.staff_line_4, dialogueSpeed, pauseTransition)
+            clear()
             staffOption()
     elif option == 2:
         footsteps.play()
         dialogue(lines.staff_line_7, dialogueSpeed, pauseTransition)
+        clear()
         schoolScene()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         staffOption()
 
@@ -300,6 +330,7 @@ def cubicleOption():
         calendar.play()
         dialogue(lines.cubicle_line_4, dialogueSpeed, pauseDialogue)
         dialogue(lines.cubicle_line_5, dialogueSpeed, pauseTransition)
+        clear()
         cubicleOption()
     elif option == 3:
         paper.play()
@@ -312,13 +343,16 @@ def cubicleOption():
         dialogue(lines.cubicle_line_11, dialogueSpeed, pauseDialogue)
         paper.play()
         dialogue(lines.cubicle_line_12, dialogueSpeed, pauseTransition)
+        clear()
         cubicleOption()
     elif option == 4:
         dialogue(lines.cubicle_line_13, dialogueSpeed, pauseDialogue)
         door_close.play()
         dialogue(lines.cubicle_line_14, dialogueSpeed, pauseTransition)
+        clear()
         schoolScene()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         cubicleOption()
 
@@ -347,16 +381,20 @@ def hackOption():
             dialogue(lines.hack_line_7, dialogueSpeed, pauseTransition)
             global allowEscape
             allowEscape = True
+            clear()
             cubicleOption()
         else:
             error.play()
             dialogue(lines.hack_line_8, dialogueSpeed, pauseDialogue)
             dialogue(lines.hack_line_9, dialogueSpeed, pauseTransition)
+            clear()
             hackOption()
     elif option == 2:
         dialogue(lines.hack_line_10, dialogueSpeed, pauseTransition)
+        clear()
         cubicleOption()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         hackOption()
 
@@ -366,11 +404,13 @@ def lockerScene():
     # call functions
     if "itemHomework" not in inventory:
         dialogue(lines.locker_line_1, dialogueSpeed, pauseTransition)
+        clear()
         lockerOption()
     else:
         dialogue(lines.locker_line_2, dialogueSpeed, pauseDialogue)
         footsteps.play()
         dialogue(lines.locker_line_3, dialogueSpeed, pauseTransition)
+        clear()
         schoolScene()
 
 def lockerOption():
@@ -403,16 +443,20 @@ def lockerOption():
             dialogue(lines.locker_line_13, endingSpeed, pauseTransition)
             inventory.append("itemHomework")
             inventory.append("itemSmallKey")
+            clear()
             schoolScene()
         else:
             locker_locked.play()
             dialogue(lines.locker_line_14, dialogueSpeed, pauseTransition)
             dialogue(lines.locker_line_15, dialogueSpeed, pauseTransition)
+            clear()
             lockerOption()
     elif option == 2:
         dialogue(lines.locker_line_16, dialogueSpeed, pauseTransition)
+        clear()
         schoolScene()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         lockerOption()
 
@@ -436,22 +480,28 @@ def yardOption():
     option = chooseOption(len(lines.yard_option))
     time.sleep(pauseTransition)
     if option == 1:
+        clear()
         schoolScene()
     elif option == 2:
         dialogue(lines.yard_line_2, dialogueSpeed, pauseDialogue)
         dialogue(lines.yard_line_3, dialogueSpeed, pauseDialogue)
         dialogue(lines.yard_line_4, dialogueSpeed, pauseTransition)
+        clear()
         yardOption()
     elif option == 3:
+        clear()
         hiddenScene()
     elif option == 4:
+        clear()
         exitScene()
     elif option == 5 and "itemFreshCake" in inventory:
         dialogue(lines.yard_line_5, dialogueSpeed, pauseDialogue)
         pygame.mixer.music.pause()
         dialogue(lines.yard_line_6, dialogueSpeed, pauseTransition)
+        clear()
         vergilScene()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         yardOption()
 
@@ -462,6 +512,7 @@ def bathroomTimer():
         time.sleep(1)
         totalSeconds -= 1
     if totalSeconds == 0 and timerRunning:
+        clear()
         endingUrgent()
 
 def bathroomScene():
@@ -508,14 +559,17 @@ def bathroomOption():
     elif option == 2:
         timerRunning = False
         dialogue(lines.bathroom_line_11, dialogueSpeed, pauseTransition)
+        clear()
         timerRunning = True
         bathroomOption()
     elif option == 3 and "itemGrenade" in inventory:
         timerRunning = False
         pygame.mixer.music.stop()
+        clear()
         endingCinema()
     else:
         timerRunning = False
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         timerRunning = True
         bathroomOption()
@@ -533,12 +587,16 @@ def paperOption():
     option = chooseOption(len(lines.paper_option))
     time.sleep(pauseTransition)
     if option == 1:
+        clear()
         endingRed()
     elif option == 2:
+        clear()
         endingBlue()
     elif option == 3 and allowEscape:
+        clear()
         endingEscaped()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         paperOption()
 
@@ -549,6 +607,7 @@ def hiddenScene():
         dialogue(lines.hidden_line_2, dialogueSpeed, pauseDialogue)
         footsteps.play()
         dialogue(lines.hidden_line_3, dialogueSpeed, pauseTransition)
+        clear()
         yardScene()
     else:
         footsteps.play()
@@ -578,13 +637,16 @@ def hiddenOption():
             door_locked.play()
             dialogue(lines.hidden_line_4, dotSpeed, pauseTransition)
             dialogue(lines.hidden_line_5, dialogueSpeed, pauseTransition)
+            clear()
             hiddenOption()
     elif option == 2:
         dialogue(lines.hidden_line_9, dialogueSpeed, pauseDialogue)
         footsteps.play()
         dialogue(lines.hidden_line_10, dialogueSpeed, pauseTransition)
+        clear()
         yardScene()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         hiddenOption()
 
@@ -605,12 +667,14 @@ def boxOption():
             dialogue(lines.box_line_3, dialogueSpeed, pauseTransition)
             weights.remove(35)
             largeBox.remove("itemRubberDuck")
+            clear()
             boxOption()
         elif retrievedItem == "itemChewedHomework":
             dialogue(lines.box_line_4, dialogueSpeed, pauseDialogue)
             dialogue(lines.box_line_5, dialogueSpeed, pauseTransition)
             weights.remove(35)
             largeBox.remove("itemChewedHomework")
+            clear()
             boxOption()
         elif retrievedItem == "itemFreshCake":
             dialogue(lines.box_line_6, dialogueSpeed, pauseDialogue)
@@ -623,17 +687,21 @@ def boxOption():
             footsteps.play()
             dialogue(lines.box_line_11, dialogueSpeed, pauseTransition)
             inventory.append("itemFreshCake")
+            clear()
             yardScene()
         else:
             dialogue(lines.box_line_12, dialogueSpeed, pauseDialogue)
             dialogue(lines.box_line_13, dialogueSpeed, pauseTransition)
+            clear()
             grenadeOption()
     elif option == 2:
         dialogue(lines.box_line_14, dialogueSpeed, pauseDialogue)
         door_close.play()
         dialogue(lines.box_line_15, dialogueSpeed, pauseTransition)
+        clear()
         yardScene()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         boxOption()
 
@@ -653,13 +721,16 @@ def grenadeOption():
         door_close.play()
         dialogue(lines.grenade_line_3, dialogueSpeed, pauseTransition)
         inventory.append("itemGrenade")
+        clear()
         yardScene()
     elif option == 2:
         dialogue(lines.grenade_line_4, dialogueSpeed, pauseTransition)
+        clear()
         weights.remove(20)
         largeBox.remove("itemGrenade")
         boxOption()
     else:
+        clear()
         dialogue(lines.option_error, dialogueSpeed, pauseTransition)
         grenadeOption()
 
@@ -679,22 +750,27 @@ def vergilOption():
     option = chooseOption(2)
     time.sleep(pauseTransition)
     if option == 1:
+        clear()
         endingVergil()
     elif option == 2:
         dialogue(vergilLine3, dialogueSpeed, pauseDialogue)
         pygame.mixer.music.unpause()
         footsteps.play()
         dialogue(vergilLine4, dialogueSpeed, pauseTransition)
+        clear()
         yardScene()
     else:
+        clear()
         dialogue(optionError, dialogueSpeed, pauseTransition)
         vergilOption()
 
 #################################################### ENDINGS ###########################################################
 def exitScene():
     if "itemGrenade" in inventory:
+        clear()
         pygame.mixer.music.pause()
         dialogue(falseEnding, dialogueSpeed, pauseTransition)
+        clear()
         pygame.mixer.music.unpause()
         entryScene()
     else:
@@ -815,17 +891,21 @@ while True:
 
     # jump scene
     if replay == "Y" or replay == "YES":
+        clear()
         continue
     elif replay == "N" or replay == "NO":
         break
     else:
+        clear()
         dialogue(replayError, dialogueSpeed, pauseTransition)
         break
 
 #################################################### QUIT GAME #########################################################
 # call functions
+clear()
 dialogue(quitLine1, dialogueSpeed, pauseDialogue)
 dialogue(quitLine2, dialogueSpeed, pauseTransition)
 
 # quit
+clear()
 exit()
