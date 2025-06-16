@@ -68,16 +68,6 @@ def chooseOption(numberOfOptions):  # teacher supplied
             option = int(option)
         return option
 
-def userInfo():
-    dialogue(lines.username, dialogueSpeed, pauseTransition)
-
-    # jump scene
-    if lines.username == "":
-        dialogue(lines.user_error, dialogueSpeed, pauseTransition)
-        userInfo()
-    else:
-        gameExplanation()
-
 def gameExplanation():
 
     # call functions
@@ -806,7 +796,7 @@ while True:
         pygame.mixer.music.stop()
         entryScene()
     else:
-        userInfo()
+        gameExplanation()
         gameRunning = True
 
     # call function
