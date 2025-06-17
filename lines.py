@@ -13,7 +13,6 @@ def ask_username():
 
 
 username = ask_username()
-endings = []
 
 option_error = "..Please select one of the options.\n\n"
 skip_error = "..Please enter Y or N.\n\n"
@@ -70,25 +69,29 @@ school_line_3 = "Maybe there’s a chance that your friend left it in there.."
 # class_scene()
 class_option = ["   (1) Search the student desks.\n",
                 "   (2) Look at the floor.\n",
-                "   (3) Leave the classroom.\n",
-                "   (4) Search Mr. W's desk.\n"]
+                "   (3) Search Mr. W's desk.\n",
+                "   (4) Leave the classroom.\n"]
 class_line_1 = "As you look around the classroom, you don't see anyone except for some leftover schoolbags.\033[" \
                "0;49m Strange.\n\n"
 class_line_2 = "\nYou search through each of the student's desks until you find what seems to be your friend's " \
                "desk.\033[0;49m You dig through, pulling out random papers in search of the homework.\n\n"
 class_line_3 = "To your dismay, you don’t find it, so you quickly shove all the papers back into the desk, " \
-               "lazily picking up some loose papers and putting them back in with the others.\n\n "
+               "lazily picking up some of the loose papers and putting them back in with the others."
 class_line_4 = "\nYou look down at the pristine, white floor, scanning for any loose papers..\n\n"
-class_line_5 = "Oh! It’s the birthday letter you wrote for your friend.\033[0;49m Ah, right! Their birthday is the " \
-               "same day as the homework’s due date.\033[0;49m Haha, what a birthday gift!\n\n"
+class_line_5 = "Oh!\033[0;49m It’s the birthday letter you wrote for your friend.\033[0;49m Ah, right! Their " \
+               "birthday is the same day as the homework’s due date.\033[0;49m Haha, what a birthday gift!\n\n"
 class_line_6 = "You carefully slip the letter back into their desk, subtly laughing to yourself."
 class_line_7 = "..."
 class_line_8 = "\n\nYou look at the floor harder..\n\n"
 class_line_9 = "Uhm.\033[0;49m No homework here."
-class_line_10 = "\nMaybe there's extra copies of the homework somewhere in here.\n\n"
-class_line_11 = "You flip through the folders and rummage through his stuff.\033[0;49m Unfortunately, he doesn't " \
+class_line_10 = "\nAll of the papers that fell out have been put back now.\n\n"
+class_line_11 = "You briefly remember that your friend’s birthday is the same day as the homework’s due date.\033[" \
+                "0;49m You should probably go get them something after you find that homework.\n\n"
+class_line_12 = "\nMaybe there's extra copies of the homework somewhere in here.\n\n"
+class_line_13 = "You flip through the folders and rummage through his stuff.\033[0;49m Unfortunately, he doesn't " \
                 "have any extras.\n\n"
-class_line_12 = "However, as you search through Mr. W's bag, you do find a staff key card..\n\n"
+class_line_14 = "However, as you search through Mr. W's bag, you do find a staff key card..\n\n"
+class_line_15 = "\nYou’ve already gotten everything you need here."
 
 key_card_option = ["   (1) Take it!\n",
                    "   (2) ..This is an invasion of privacy.\n"]
@@ -110,19 +113,19 @@ staff_line_4 = "\n\nAh, of course.\033[0;49m The door can only be unlocked by st
 staff_line_5 = "\n\nYou fish for the key card in your pocket and swipe it through the door's sensor.\033[0;49m The " \
                "door opens with a click, slowly cracking open as you cautiously look around once more.\n\n"
 staff_line_6 = "You quickly find Mr. W's cubicle.\033[0;49m Scanning through, there is a laptop, a calendar, " \
-               "several piles of schoolwork, and several scattered pens.\n\n"
+               "several piles of schoolwork, and some scattered pens.\n\n"
 staff_line_7 = "You aren't supposed to be here, anyway."
 
 cubicle_option = ["   (1) Use the laptop.\n",
                   "   (2) Examine the calendar.\n",
                   "   (3) Search the piles of schoolwork.\n",
                   "   (4) Leave.\n"]
-cubicle_line_1 = "\nYYou open up the laptop, but it’s locked behind a four-digit PIN.\n\n"
+cubicle_line_1 = "\nYou open up the laptop, but it’s locked behind a four-digit PIN.\n\n"
 cubicle_line_2 = "\nThe calendar is hung on the inner sidewall of the cubicle, skipped to April.\033[0;49m It has " \
                  "several markings with dates for meetings and assignment due dates, including the homework's due " \
                  "date next Monday.\n\n"
-cubicle_line_3 = "There’s also a small yellow sticky note at the bottom of the calendar..\n\n"
-cubicle_line_4 = "\nOther than that, nothing seems to be very significant."
+cubicle_line_3 = "There’s also a small yellow sticky note with sketched symbols at the bottom of the calendar..\n"
+cubicle_line_4 = "Other than that, nothing seems to be very significant."
 cubicle_line_5 = "\nYou dig through the piles of schoolwork, pulling out several marked and unmarked assignments " \
                  "from students.\033[0;49m You catch a glimpse of your name in the sea of paper.\033[0;49m It's the " \
                  "unit test from last Friday!\n\n"
@@ -140,12 +143,12 @@ cubicle_line_13 = "You turn back around and leave the staff room, softly closing
 
 hack_option = ["   (1) Enter the password.\n",
                "   (2) Forget it.\n"]
-hack_line_1 = "\n..Got it!\n\n"
+hack_line_1 = "\n..Got it! He probably should hide his PIN hint somewhere else now.\n\n"
 hack_line_2 = "The laptop unlocks before you and you celebrate internally.\033[0;49m However, before you can " \
               "navigate through it, an open tab catches your eye.\033[0;49m It seems to be a report of a missing " \
               "student at this school.\033[0;49m On a separate tab, a low quality depiction of a masked figure " \
-              "wearing a red cloak nearly makes you jump out of your seat.\n\n"
-hack_line_3 = "\nThat image is..\033[0;49m Very creepy.\n\n"
+              "wearing a red cloak nearly makes you jump out of your seat.\n"
+hack_line_3 = "That image is..\033[0;49m Very creepy.\n\n"
 hack_line_4 = "It's rumored that the student's disappearance was due to a supernatural entity in one of the school " \
               "bathrooms.\033[0;49m You've heard claims of another student who survived the spirit by outsmarting " \
               "it.\033[0;49m You never really believed it, but concerning the amount of disappearances recently, " \
@@ -155,7 +158,7 @@ hack_line_5 = "Was Mr. W investigating this, perhaps?\033[0;49m Could there actu
 hack_line_6 = "You're seriously unnerved.\033[0;49m Forgetting what you were originally searching for, you close " \
               "the laptop and set it aside with a newly instilled feeling of fear.\n"
 hack_line_7 = "\n..Incorrect. Maybe there is a clue around here somewhere?\n\n"
-hack_line_8 = "\nThere's no way you're gonna spend the whole day trying to hack into your teacher's computer.\n\n"
+hack_line_8 = "\nThere's no way you're gonna spend the whole day trying to hack into your teacher's computer."
 
 # locker_scene()
 locker_option = ["   (1) Try to unlock it.\n",
@@ -347,7 +350,5 @@ ending_vergil_4 = "Maybe you should stay here for a while.\n\n\033[1;49m"
 ending_vergil_5 = "ENDING:\033[1;49m Berried Delight" + " \U0001F370" + " "
 
 # quit
-replay_line = ["\n\n\n\033[0;49mPlay again? Y/N\n",
-               "Discovered Endings: " + str(len(endings)) + "/8"]
 quit_line_1 = f"Thank you for playing, {username}!"
 quit_line_2 = "\nQuitting now.."

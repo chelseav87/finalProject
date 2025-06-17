@@ -33,20 +33,21 @@ slash = pygame.mixer.Sound(os.path.join(folder, "slash.wav"))
 success = pygame.mixer.Sound(os.path.join(folder, "success.wav"))
 zip_up = pygame.mixer.Sound(os.path.join(folder, "zip_up.wav"))
 
-# constants
-DIALOGUE_SPEED = 0.04
-ENDING_SPEED = 0.06
-DOT_SPEED = 0.6
+# game variables
+DIALOGUE_SPEED = 0.03
+ENDING_SPEED = 0.05
+DOT_SPEED = 0.5
 OPTION_SPEED = 0.01
 PAUSE_DIALOGUE = 0.5
 PAUSE_TRANSITION = 1
-
-# variables
 weights = [35, 35, 10, 20]
 inventory = []
+prompts = []
+endings = []
 large_box = ["item_rubber_duck", "item_chewed_homework", "item_fresh_cake", "item_grenade"]
 game_running = False
-timer_running = False
+stop_timer = threading.Event()
+timeout_occurred = False
 
 
 # set text behaviour
@@ -210,43 +211,55 @@ def class_scene():
 
 
 def class_option():
-    if "item_staff_key_card" in inventory:
-        lines.class_option.pop()
-
     for story_line in lines.class_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    option = choose_option(len(lines.class_option))
+    option = choose_option(4)
     time.sleep(PAUSE_TRANSITION)
     # (1) Search the student desks.
     if option == 1:
         paper.play()
         dialogue(lines.class_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-        dialogue(lines.class_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-        calendar.play()
-        dialogue(lines.class_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        paper.play()
+        dialogue(lines.class_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        prompts.append("prompt_birthday")
         clear()
         class_option()
     # (2) Look at the floor.
     elif option == 2:
-        dialogue(lines.class_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
-        dialogue(lines.class_line_6, DOT_SPEED, PAUSE_TRANSITION)
-        dialogue(lines.class_line_7, DIALOGUE_SPEED, 3)
-        dialogue(lines.class_line_8, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        if "prompt_important_date" in prompts:
+            dialogue(lines.class_line_10, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            dialogue(lines.class_line_11, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        else:
+            dialogue(lines.class_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            if "prompt_birthday" in prompts:
+                dialogue(lines.class_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+                calendar.play()
+                dialogue(lines.class_line_6, DIALOGUE_SPEED, PAUSE_TRANSITION)
+                prompts.append("prompt_important_date")
+            else:
+                dialogue(lines.class_line_7, DOT_SPEED, PAUSE_TRANSITION)
+                dialogue(lines.class_line_8, DIALOGUE_SPEED, 2)
+                dialogue(lines.class_line_9, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         class_option()
-    # (3) Leave the classroom.
+    # (3) Search. Mr. W's desk.
     elif option == 3:
+        if "item_staff_key_card" not in inventory:
+            dialogue(lines.class_line_12, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            paper.play()
+            dialogue(lines.class_line_13, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            box.play()
+            dialogue(lines.class_line_14, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            key_card_option()
+        else:
+            dialogue(lines.class_line_15, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            clear()
+            class_option()
+    # (4) Leave the classroom.
+    elif option == 4:
         clear()
         school_scene()
-    # (4) Search. Mr. W's desk.
-    elif option == 4:
-        dialogue(lines.class_line_9, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-        paper.play()
-        dialogue(lines.class_line_10, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-        box.play()
-        dialogue(lines.class_line_11, DIALOGUE_SPEED, PAUSE_TRANSITION)
-        key_card_option()
     else:
         clear()
         dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
@@ -379,7 +392,7 @@ def hack_option():
     time.sleep(PAUSE_TRANSITION)
     # (1) Enter the password.
     if option == 1:
-        ask_pin = "PIN: \n"
+        ask_pin = "\nPIN: \n"
         dialogue(ask_pin, DIALOGUE_SPEED, 0)
         entered_pin = input("   ")
         time.sleep(PAUSE_TRANSITION)
@@ -394,8 +407,7 @@ def hack_option():
             dialogue(lines.hack_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.hack_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.hack_line_6, DIALOGUE_SPEED, PAUSE_TRANSITION)
-            global prompt_escape
-            prompt_escape = True
+            prompts.append("prompt_escape")
             clear()
             cubicle_option()
         else:
@@ -524,10 +536,10 @@ def yard_option():
 
 def bathroom_timer():
     total_seconds = 5
-    while total_seconds > 0 and timer_running:
+    while total_seconds > 0 and not stop_timer.is_set():
         time.sleep(1)
         total_seconds -= 1
-    if total_seconds == 0 and timer_running:
+    if total_seconds == 0 and not stop_timer.is_set():
         clear()
         ending_urgent()
 
@@ -547,22 +559,28 @@ def bathroom_scene():
 
 
 def bathroom_option():
+    global timeout_occurred
+    timeout_occurred = False
+
     if "item_grenade" in inventory:
         lines.bathroom_option.append("   (3) Destroy everything.\n")
 
     for story_line in lines.bathroom_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    global timer_running
-    timer_running = True
+    stop_timer.clear()
     bathroom_thread = threading.Thread(target=bathroom_timer)
     bathroom_thread.start()
 
     option = choose_option(len(lines.bathroom_option))
-    time.sleep(PAUSE_TRANSITION)
+    stop_timer.set()
+    if bathroom_thread is not None:
+        bathroom_thread.join()
+    if timeout_occurred:
+        return
+
     # (1) Use the stall.
     if option == 1:
-        timer_running = False
         pygame.mixer.music.stop()
         running.play()
         dialogue(lines.bathroom_line_7, DIALOGUE_SPEED, PAUSE_TRANSITION)
@@ -572,31 +590,26 @@ def bathroom_option():
         paper_option()
     # (2) Leave.
     elif option == 2:
-        timer_running = False
         dialogue(lines.bathroom_line_11, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
-        timer_running = True
         bathroom_option()
     # (3) Destroy everything.
     elif option == 3 and "item_grenade" in inventory:
-        timer_running = False
         pygame.mixer.music.stop()
         clear()
         ending_cinema()
     else:
-        timer_running = False
         clear()
         dialogue(lines.option_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
-        timer_running = True
         bathroom_option()
 
 
 def paper_option():
-    if prompt_escape:
+    if "prompt_escape" in prompts:
         lines.paper_option.append("   (3) I don't want any paper.\n")
 
     for story_line in lines.paper_option:
-        heartbeat.play(loops=3)
+        heartbeat.play()
         dialogue(story_line, OPTION_SPEED, 0)
 
     option = choose_option(len(lines.paper_option))
@@ -610,7 +623,7 @@ def paper_option():
         clear()
         ending_blue()
     # (3) I don't want any paper.
-    elif option == 3 and prompt_escape:
+    elif option == 3 and "prompt_escape" in prompts:
         clear()
         ending_escaped()
     else:
@@ -800,8 +813,8 @@ def exit_scene():
             footsteps.play()
             dialogue(lines.ending_freed_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.ending_freed_3, ENDING_SPEED, PAUSE_TRANSITION)
-            if "ending_freed" not in lines.endings:
-                lines.endings.append("ending_freed")
+            if "ending_freed" not in endings:
+                endings.append("ending_freed")
         else:
             pygame.mixer.music.stop()
             dialogue(lines.ending_lied_1, DOT_SPEED, PAUSE_TRANSITION)
@@ -811,17 +824,19 @@ def exit_scene():
             running.play()
             dialogue(lines.ending_lied_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.ending_lied_4, ENDING_SPEED, PAUSE_TRANSITION)
-            if "ending_lied" not in lines.endings:
-                lines.endings.append("ending_lied")
+            if "ending_lied" not in endings:
+                endings.append("ending_lied")
 
 
 def ending_urgent():
+    global timeout_occurred
+    timeout_occurred = True
     pygame.mixer.music.stop()
     dialogue(lines.ending_urgent_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.ending_urgent_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.ending_urgent_3, ENDING_SPEED, PAUSE_TRANSITION)
-    if "ending_urgent" not in lines.endings:
-        lines.endings.append("ending_urgent")
+    if "ending_urgent" not in endings:
+        endings.append("ending_urgent")
 
 
 def ending_red():
@@ -830,12 +845,12 @@ def ending_red():
     slash.play()
     pygame.mixer.music.load(os.path.join(folder, 'dead_theme.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(lines.ending_red_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    dialogue(lines.ending_red_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
     dialogue(lines.ending_red_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
     dialogue(lines.ending_red_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
     dialogue(lines.ending_red_5, ENDING_SPEED, PAUSE_TRANSITION)
-    if "ending_red" not in lines.endings:
-        lines.endings.append("ending_red")
+    if "ending_red" not in endings:
+        endings.append("ending_red")
 
 
 def ending_blue():
@@ -844,12 +859,12 @@ def ending_blue():
     gasp.play()
     pygame.mixer.music.load(os.path.join(folder, 'dead_theme.mp3'))
     pygame.mixer.music.play(-1)
-    dialogue(lines.ending_blue_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-    dialogue(lines.ending_blue_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-    dialogue(lines.ending_blue_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+    dialogue(lines.ending_blue_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    dialogue(lines.ending_blue_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
+    dialogue(lines.ending_blue_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
     dialogue(lines.ending_blue_5, ENDING_SPEED, PAUSE_TRANSITION)
-    if "ending_blue" not in lines.endings:
-        lines.endings.append("ending_blue")
+    if "ending_blue" not in endings:
+        endings.append("ending_blue")
 
 
 def ending_escaped():
@@ -857,12 +872,12 @@ def ending_escaped():
     dialogue(lines.ending_escaped_1, DOT_SPEED, PAUSE_TRANSITION)
     dialogue(lines.ending_escaped_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
     running.play()
-    heartbeat.play(loops=3)
+    heartbeat.play()
     dialogue(lines.ending_escaped_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.ending_escaped_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.ending_escaped_5, ENDING_SPEED, PAUSE_TRANSITION)
-    if "ending_escaped" not in lines.endings:
-        lines.endings.append("ending_escaped")
+    if "ending_escaped" not in endings:
+        endings.append("ending_escaped")
 
 
 def ending_cinema():
@@ -876,8 +891,8 @@ def ending_cinema():
     dialogue(lines.ending_cinema_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.ending_cinema_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.ending_cinema_6, ENDING_SPEED, PAUSE_TRANSITION)
-    if "ending_cinema" not in lines.endings:
-        lines.endings.append("ending_cinema")
+    if "ending_cinema" not in endings:
+        endings.append("ending_cinema")
 
 
 def ending_vergil():
@@ -888,8 +903,8 @@ def ending_vergil():
     dialogue(lines.ending_vergil_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.ending_vergil_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.ending_vergil_5, ENDING_SPEED, PAUSE_TRANSITION)
-    if "ending_vergil" not in lines.endings:
-        lines.endings.append("ending_vergil")
+    if "ending_vergil" not in endings:
+        endings.append("ending_vergil")
 
 
 while True:
@@ -897,16 +912,19 @@ while True:
         pygame.mixer.music.stop()
         entry_scene()
     else:
-        game_explanation()
+        cubicle_option()
         game_running = True
 
     # reset
     inventory.clear()
-    prompt_escape = False
+    prompts.clear()
     weights = [35, 35, 10, 20]
     large_box = ["item_rubber_duck", "item_chewed_homework", "item_fresh_cake", "item_grenade"]
 
-    dialogue(lines.replay_line, DIALOGUE_SPEED, 0)
+    replay_line = ["\n\n\n\033[0;49mPlay again? Y/N\n",
+                   "Discovered Endings: " + str(len(endings)) + "/8"]
+
+    dialogue(replay_line, DIALOGUE_SPEED, 0)
     replay = input("\n   ")
     time.sleep(PAUSE_TRANSITION)
 
@@ -921,6 +939,7 @@ while True:
         break
 
 clear()
+pygame.mixer.music.stop()
 dialogue(lines.quit_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
 dialogue(lines.quit_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
 
