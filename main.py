@@ -6,6 +6,7 @@ import threading
 import time
 import pygame
 import lines
+import ascii
 
 # sound effects
 pygame.init()
@@ -130,8 +131,6 @@ def intro_scene():
 def entry_scene():
     pygame.mixer.music.load(os.path.join(folder, 'main_theme.mp3'))
     pygame.mixer.music.play(-1)
-
-    # call functions
     dialogue(lines.entry_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
     entry_option()
 
@@ -388,6 +387,7 @@ def hack_option():
             success.play()
             dialogue(lines.hack_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.hack_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+            print(ascii.ASCII_AKAMANTO)
             time.sleep(PAUSE_TRANSITION)
             dialogue(lines.hack_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.hack_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
@@ -689,14 +689,14 @@ def box_option():
             large_box.remove("item_rubber_duck")
             clear()
             box_option()
-        elif retrieved_item == "itemChewedHomework":
+        elif retrieved_item == "item_chewed_homework":
             dialogue(lines.box_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.box_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
             weights.remove(35)
-            large_box.remove("itemChewedHomework")
+            large_box.remove("item_chewed_homework")
             clear()
             box_option()
-        elif retrieved_item == "itemFreshCake":
+        elif retrieved_item == "item_fresh_cake":
             dialogue(lines.box_line_6, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.box_line_7, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             zip_up.play()
@@ -706,7 +706,7 @@ def box_option():
             dialogue(lines.box_line_10, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             footsteps.play()
             dialogue(lines.box_line_11, DIALOGUE_SPEED, PAUSE_TRANSITION)
-            inventory.append("itemFreshCake")
+            inventory.append("item_fresh_cake")
             clear()
             yard_scene()
         else:
@@ -739,14 +739,14 @@ def grenade_option():
         dialogue(lines.grenade_line_2, ENDING_SPEED, PAUSE_DIALOGUE)
         door_close.play()
         dialogue(lines.grenade_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
-        inventory.append("itemGrenade")
+        inventory.append("item_grenade")
         clear()
         yard_scene()
     elif option == 2:
         dialogue(lines.grenade_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         weights.remove(20)
-        large_box.remove("itemGrenade")
+        large_box.remove("item_grenade")
         box_option()
     else:
         clear()
@@ -786,7 +786,7 @@ def vergil_option():
 
 
 def exit_scene():
-    if "itemGrenade" in inventory:
+    if "item_grenade" in inventory:
         clear()
         pygame.mixer.music.pause()
         dialogue(lines.ending_false, DIALOGUE_SPEED, PAUSE_TRANSITION)
@@ -794,7 +794,7 @@ def exit_scene():
         pygame.mixer.music.unpause()
         entry_scene()
     else:
-        if "itemHomework" in inventory:
+        if "item_homework" in inventory:
             pygame.mixer.music.load(os.path.join(folder, 'normal_ending.mp3'))
             pygame.mixer.music.play(-1)
             dialogue(lines.ending_freed_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
