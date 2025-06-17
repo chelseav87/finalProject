@@ -15,7 +15,6 @@ def ask_username():
 username = ask_username()
 endings = []
 
-# errors
 option_error = "..Please select one of the options.\n\n"
 skip_error = "..Please enter Y or N.\n\n"
 replay_error = "..I'm going to assume that's a no.\n"
@@ -123,7 +122,7 @@ cubicle_line_2 = "\nThe calendar is hung on the inner sidewall of the cubicle, s
                  "several markings with dates for meetings and assignment due dates, including the homework's due " \
                  "date next Monday.\n\n"
 cubicle_line_3 = "There’s also a small yellow sticky note at the bottom of the calendar..\n\n"
-cubicle_line_4 = "Other than that, nothing seems to be very significant."
+cubicle_line_4 = "\nOther than that, nothing seems to be very significant."
 cubicle_line_5 = "\nYou dig through the piles of schoolwork, pulling out several marked and unmarked assignments " \
                  "from students.\033[0;49m You catch a glimpse of your name in the sea of paper.\033[0;49m It's the " \
                  "unit test from last Friday!\n\n"
@@ -141,23 +140,22 @@ cubicle_line_13 = "You turn back around and leave the staff room, softly closing
 
 hack_option = ["   (1) Enter the password.\n",
                "   (2) Forget it.\n"]
-hack_line_1 = "\nPassword Hint:"
-hack_line_2 = "\n..Got it!\n\n"
-hack_line_3 = "The laptop unlocks before you as you celebrate internally.\033[0;49m However, before you can navigate " \
-              "through it, an open tab catches your eye.\033[0;49m It seems to be a report of a missing student at " \
-              "this school.\033[0;49m On a separate tab, a low quality depiction of a masked figure wearing a red " \
-              "cloak nearly makes you jump out of your seat.\n\n"
-hack_line_4 = "\nThat image is..\033[0;49m Very creepy.\n\n"
-hack_line_5 = "It's rumored that the student's disappearance was due to a supernatural entity in one of the school " \
+hack_line_1 = "\n..Got it!\n\n"
+hack_line_2 = "The laptop unlocks before you and you celebrate internally.\033[0;49m However, before you can " \
+              "navigate through it, an open tab catches your eye.\033[0;49m It seems to be a report of a missing " \
+              "student at this school.\033[0;49m On a separate tab, a low quality depiction of a masked figure " \
+              "wearing a red cloak nearly makes you jump out of your seat.\n\n"
+hack_line_3 = "\nThat image is..\033[0;49m Very creepy.\n\n"
+hack_line_4 = "It's rumored that the student's disappearance was due to a supernatural entity in one of the school " \
               "bathrooms.\033[0;49m You've heard claims of another student who survived the spirit by outsmarting " \
               "it.\033[0;49m You never really believed it, but concerning the amount of disappearances recently, " \
               "it might actually be real.\n\n"
-hack_line_6 = "Was Mr. W investigating this, perhaps?\033[0;49m Could there actually be a serial killer hiding at " \
+hack_line_5 = "Was Mr. W investigating this, perhaps?\033[0;49m Could there actually be a serial killer hiding at " \
               "this school?\n\n"
-hack_line_7 = "You're seriously unnerved.\033[0;49m Forgetting what you were originally searching for, you close " \
+hack_line_6 = "You're seriously unnerved.\033[0;49m Forgetting what you were originally searching for, you close " \
               "the laptop and set it aside with a newly instilled feeling of fear.\n"
-hack_line_8 = "\n..Incorrect. Maybe there is a clue around here somewhere?\n\n"
-hack_line_9 = "\nThere's no way you're gonna spend the whole day trying to hack into your teacher's computer.\n\n"
+hack_line_7 = "\n..Incorrect. Maybe there is a clue around here somewhere?\n\n"
+hack_line_8 = "\nThere's no way you're gonna spend the whole day trying to hack into your teacher's computer.\n\n"
 
 # locker_scene()
 locker_option = ["   (1) Try to unlock it.\n",

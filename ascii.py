@@ -34,7 +34,7 @@ ASCII_AKAMANTO = r"""
 ███████████████████████████████████████████████████
 ███████████████████████████████████████████████████
 """
-# original artwork by chilla's art
+# original artwork by Chilla's Art
 
 ASCII_HINT = r"""
 

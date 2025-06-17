@@ -58,6 +58,7 @@ def dialogue(story_line, parameter_speed, parameter_pause):
     time.sleep(parameter_pause)
 
 
+# clear console
 def clear():
     if os.name == 'nt':
         _ = os.system('cls')
@@ -79,7 +80,6 @@ def choose_option(number_of_options):  # teacher supplied
 
 
 def game_explanation():
-
     clear()
     dialogue(lines.expl_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.expl_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
@@ -88,14 +88,11 @@ def game_explanation():
 
 
 def skip_intro():
-    # call function
     dialogue(lines.skip_line, DIALOGUE_SPEED, 0)
 
-    # store as skip
     skip = input("\n   ")
     time.sleep(PAUSE_TRANSITION)
 
-    # jump scene
     if skip.upper() == "N" or skip.upper() == "NO":
         clear()
         intro_scene()
@@ -112,7 +109,6 @@ def intro_scene():
     pygame.mixer.music.load(os.path.join(folder, 'intro_theme.mp3'))
     pygame.mixer.music.play(-1)
 
-    # call functions
     footsteps.play()
     dialogue(lines.intro_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.intro_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
@@ -123,7 +119,6 @@ def intro_scene():
     footsteps.play()
     dialogue(lines.intro_line_7, DIALOGUE_SPEED, PAUSE_TRANSITION)
 
-    # jump scene
     clear()
     entry_scene()
 
@@ -136,23 +131,24 @@ def entry_scene():
 
 
 def entry_option():
-    # call functions
     for story_line in lines.entry_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(3)
     time.sleep(PAUSE_TRANSITION)
+    # (1) Search inside the school.
     if option == 1:
         footsteps.play()
         dialogue(lines.entry_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         school_scene()
+    # (2) Search the schoolyard.
     elif option == 2:
         footsteps.play()
         dialogue(lines.entry_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         yard_scene()
+    # (3) Go home.
     elif option == 3:
         clear()
         exit_scene()
@@ -163,35 +159,38 @@ def entry_option():
 
 
 def school_scene():
-    # call functions
     door_creak.play()
     dialogue(lines.school_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
     school_option()
 
 
 def school_option():
-    # call functions
     for story_line in lines.school_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(6)
     time.sleep(PAUSE_TRANSITION)
+    # (1) Search the homeroom class.
     if option == 1:
         clear()
         class_scene()
+    # (2) Search the staff room.
     elif option == 2:
         clear()
         staff_scene()
+    # (3) Search your friend's locker.
     elif option == 3:
         clear()
         locker_scene()
+    # (4) Search the schoolyard.
     elif option == 4:
         clear()
         yard_scene()
+    # (5) Leave the school.
     elif option == 5:
         clear()
         entry_scene()
+    # (6) Go to the bathroom?
     elif option == 6:
         dialogue(lines.school_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         footsteps.play()
@@ -205,7 +204,6 @@ def school_option():
 
 
 def class_scene():
-    # call functions
     door_open.play()
     dialogue(lines.class_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
     class_option()
@@ -215,13 +213,12 @@ def class_option():
     if "item_staff_key_card" in inventory:
         lines.class_option.pop()
 
-    # call function
     for story_line in lines.class_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(len(lines.class_option))
     time.sleep(PAUSE_TRANSITION)
+    # (1) Search the student desks.
     if option == 1:
         paper.play()
         dialogue(lines.class_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
@@ -230,6 +227,7 @@ def class_option():
         dialogue(lines.class_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         class_option()
+    # (2) Look at the floor.
     elif option == 2:
         dialogue(lines.class_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
         dialogue(lines.class_line_6, DOT_SPEED, PAUSE_TRANSITION)
@@ -237,9 +235,11 @@ def class_option():
         dialogue(lines.class_line_8, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         class_option()
+    # (3) Leave the classroom.
     elif option == 3:
         clear()
         school_scene()
+    # (4) Search. Mr. W's desk.
     elif option == 4:
         dialogue(lines.class_line_9, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         paper.play()
@@ -254,13 +254,12 @@ def class_option():
 
 
 def key_card_option():
-    # call function
     for story_line in lines.key_card_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(2)
     time.sleep(PAUSE_TRANSITION)
+    # (1) Take it!
     if option == 1:
         dialogue(lines.key_card_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         zip_up.play()
@@ -270,6 +269,7 @@ def key_card_option():
         inventory.append("item_staff_key_card")
         clear()
         class_option()
+    # (2) ..This is an invasion of privacy.
     elif option == 2:
         dialogue(lines.key_card_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         zip_up.play()
@@ -283,21 +283,19 @@ def key_card_option():
 
 
 def staff_scene():
-    # call functions
     dialogue(lines.staff_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.staff_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
     staff_option()
 
 
 def staff_option():
-    # call functions
     for story_line in lines.staff_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(2)
     print("")
     time.sleep(PAUSE_TRANSITION)
+    # (1) Search inside the staff room.
     if option == 1:
         if "item_staff_key_card" in inventory:
             door_locked.play()
@@ -313,6 +311,7 @@ def staff_option():
             dialogue(lines.staff_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
             clear()
             staff_option()
+    # (2) Leave.
     elif option == 2:
         footsteps.play()
         dialogue(lines.staff_line_7, DIALOGUE_SPEED, PAUSE_TRANSITION)
@@ -325,42 +324,45 @@ def staff_option():
 
 
 def cubicle_option():
-    # call functions
     for story_line in lines.cubicle_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(4)
     time.sleep(PAUSE_TRANSITION)
+    # (1) Use the laptop.
     if option == 1:
-        dialogue(lines.cubicle_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-        time.sleep(PAUSE_TRANSITION)
-        dialogue(lines.cubicle_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-        dialogue(lines.cubicle_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.cubicle_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
         hack_option()
+    # (2) Examine the calendar.
     elif option == 2:
         calendar.play()
-        dialogue(lines.cubicle_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-        dialogue(lines.cubicle_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.cubicle_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.cubicle_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        print(ascii.ASCII_HINT)
+        print(input("   > Press enter to continue"))
+        time.sleep(PAUSE_TRANSITION)
+        dialogue(lines.cubicle_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         cubicle_option()
+    # (3) Search the piles of schoolwork.
     elif option == 3:
         paper.play()
-        dialogue(lines.cubicle_line_6, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.cubicle_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         calendar.play()
-        dialogue(lines.cubicle_line_7, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-        dialogue(lines.cubicle_line_8, ENDING_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.cubicle_line_6, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.cubicle_line_7, ENDING_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.cubicle_line_8, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         dialogue(lines.cubicle_line_9, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         dialogue(lines.cubicle_line_10, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-        dialogue(lines.cubicle_line_11, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         paper.play()
-        dialogue(lines.cubicle_line_12, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.cubicle_line_11, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         cubicle_option()
+    # (4) Leave.
     elif option == 4:
-        dialogue(lines.cubicle_line_13, DIALOGUE_SPEED, PAUSE_DIALOGUE)
+        dialogue(lines.cubicle_line_12, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         door_close.play()
-        dialogue(lines.cubicle_line_14, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.cubicle_line_13, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         school_scene()
     else:
@@ -370,41 +372,40 @@ def cubicle_option():
 
 
 def hack_option():
-    # call functions
     for story_line in lines.hack_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(2)
     time.sleep(PAUSE_TRANSITION)
+    # (1) Enter the password.
     if option == 1:
-        dialogue(lines.hack_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
-        ask_pin = "Password: \n"
+        ask_pin = "PIN: \n"
         dialogue(ask_pin, DIALOGUE_SPEED, 0)
         entered_pin = input("   ")
         time.sleep(PAUSE_TRANSITION)
         if entered_pin == "8970":
             success.play()
+            dialogue(lines.hack_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.hack_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-            dialogue(lines.hack_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             print(ascii.ASCII_AKAMANTO)
+            print(input("   > Press enter to continue"))
             time.sleep(PAUSE_TRANSITION)
+            dialogue(lines.hack_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.hack_line_4, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.hack_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-            dialogue(lines.hack_line_6, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-            dialogue(lines.hack_line_7, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            dialogue(lines.hack_line_6, DIALOGUE_SPEED, PAUSE_TRANSITION)
             global prompt_escape
             prompt_escape = True
             clear()
             cubicle_option()
         else:
             error.play()
-            dialogue(lines.hack_line_8, DIALOGUE_SPEED, PAUSE_DIALOGUE)
-            dialogue(lines.hack_line_9, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            dialogue(lines.hack_line_7, DIALOGUE_SPEED, PAUSE_TRANSITION)
             clear()
             hack_option()
+    # (2) Forget it.
     elif option == 2:
-        dialogue(lines.hack_line_10, DIALOGUE_SPEED, PAUSE_TRANSITION)
+        dialogue(lines.hack_line_8, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         cubicle_option()
     else:
@@ -414,8 +415,6 @@ def hack_option():
 
 
 def locker_scene():
-
-    # call functions
     if "item_homework" not in inventory:
         dialogue(lines.locker_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
@@ -429,13 +428,12 @@ def locker_scene():
 
 
 def locker_option():
-    # call functions
     for story_line in lines.locker_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(2)
     time.sleep(PAUSE_TRANSITION)
+    # (1) Try to unlock it.
     if option == 1:
         ask_passcode = "\nTurn dials to:   x|x|x|x\n"
         dialogue(ask_passcode, DIALOGUE_SPEED, 0)
@@ -466,6 +464,7 @@ def locker_option():
             dialogue(lines.locker_line_15, DIALOGUE_SPEED, PAUSE_TRANSITION)
             clear()
             locker_option()
+    # (2) Leave.
     elif option == 2:
         dialogue(lines.locker_line_16, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
@@ -477,7 +476,6 @@ def locker_option():
 
 
 def yard_scene():
-
     door_creak.play()
     dialogue(lines.yard_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
     yard_option()
@@ -487,28 +485,31 @@ def yard_option():
     if "ite_fresh_cake" in inventory:
         lines.yard_option.append("   (5) ..What is that in the distance?\n")
 
-    # call function
     for story_line in lines.yard_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(len(lines.yard_option))
     time.sleep(PAUSE_TRANSITION)
+    # (1) Search inside the school.
     if option == 1:
         clear()
         school_scene()
+    # (2) Search near the fences.
     elif option == 2:
         dialogue(lines.yard_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         dialogue(lines.yard_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         dialogue(lines.yard_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         yard_option()
+    # (3) Search that room at the very end of the school.
     elif option == 3:
         clear()
         hidden_scene()
+    # (4) Go home.
     elif option == 4:
         clear()
         exit_scene()
+    # (5) ..What is that in the distance?
     elif option == 5 and "item_fresh_cake" in inventory:
         dialogue(lines.yard_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         pygame.mixer.music.pause()
@@ -532,8 +533,6 @@ def bathroom_timer():
 
 
 def bathroom_scene():
-
-    # call functions
     pygame.mixer.music.stop()
     door_creak.play()
     dialogue(lines.bathroom_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
@@ -548,11 +547,9 @@ def bathroom_scene():
 
 
 def bathroom_option():
-    # dialogue
     if "item_grenade" in inventory:
         lines.bathroom_option.append("   (3) Destroy everything.\n")
 
-    # call functions
     for story_line in lines.bathroom_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
@@ -561,9 +558,9 @@ def bathroom_option():
     bathroom_thread = threading.Thread(target=bathroom_timer)
     bathroom_thread.start()
 
-    # options
     option = choose_option(len(lines.bathroom_option))
     time.sleep(PAUSE_TRANSITION)
+    # (1) Use the stall.
     if option == 1:
         timer_running = False
         pygame.mixer.music.stop()
@@ -573,12 +570,14 @@ def bathroom_option():
         dialogue(lines.bathroom_line_9, DIALOGUE_SPEED, PAUSE_TRANSITION)
         dialogue(lines.bathroom_line_10, ENDING_SPEED, PAUSE_TRANSITION)
         paper_option()
+    # (2) Leave.
     elif option == 2:
         timer_running = False
         dialogue(lines.bathroom_line_11, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
         timer_running = True
         bathroom_option()
+    # (3) Destroy everything.
     elif option == 3 and "item_grenade" in inventory:
         timer_running = False
         pygame.mixer.music.stop()
@@ -596,20 +595,21 @@ def paper_option():
     if prompt_escape:
         lines.paper_option.append("   (3) I don't want any paper.\n")
 
-    # call functions
     for story_line in lines.paper_option:
         heartbeat.play(loops=3)
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(len(lines.paper_option))
     time.sleep(PAUSE_TRANSITION)
+    # (1) Red paper.
     if option == 1:
         clear()
         ending_red()
+    # (2) Blue paper.
     elif option == 2:
         clear()
         ending_blue()
+    # (3) I don't want any paper.
     elif option == 3 and prompt_escape:
         clear()
         ending_escaped()
@@ -620,7 +620,6 @@ def paper_option():
 
 
 def hidden_scene():
-    # call functions
     if 'item_fresh_cake' or 'item_grenade' in inventory:
         dialogue(lines.hidden_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         footsteps.play()
@@ -634,14 +633,13 @@ def hidden_scene():
 
 
 def hidden_option():
-    # call functions
     for story_line in lines.hidden_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(2)
     print("")
     time.sleep(PAUSE_TRANSITION)
+    # (1) Open the door.
     if option == 1:
         if "item_small_key" in inventory:
             door_locked.play()
@@ -658,6 +656,7 @@ def hidden_option():
             dialogue(lines.hidden_line_5, DIALOGUE_SPEED, PAUSE_TRANSITION)
             clear()
             hidden_option()
+    # (2) Leave.
     elif option == 2:
         dialogue(lines.hidden_line_9, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         footsteps.play()
@@ -671,13 +670,12 @@ def hidden_option():
 
 
 def box_option():
-    # call functions
     for story_line in lines.box_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(2)
     time.sleep(PAUSE_TRANSITION)
+    # (1) Dig through the box.
     if option == 1:
         box.play()
         dialogue(lines.box_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
@@ -714,6 +712,7 @@ def box_option():
             dialogue(lines.box_line_13, DIALOGUE_SPEED, PAUSE_TRANSITION)
             clear()
             grenade_option()
+    # (2) Maybe you should leave it alone.
     elif option == 2:
         dialogue(lines.box_line_14, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         door_close.play()
@@ -730,9 +729,9 @@ def grenade_option():
     for story_line in lines.grenade_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(2)
     time.sleep(PAUSE_TRANSITION)
+    # (1) Yes!
     if option == 1:
         dialogue(lines.grenade_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         success.play()
@@ -742,6 +741,7 @@ def grenade_option():
         inventory.append("item_grenade")
         clear()
         yard_scene()
+    # (2) Absolutely not.
     elif option == 2:
         dialogue(lines.grenade_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
         clear()
@@ -755,23 +755,22 @@ def grenade_option():
 
 
 def vergil_scene():
-    # call functions
     dialogue(lines.vergil_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
     dialogue(lines.vergil_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
     vergil_option()
 
 
 def vergil_option():
-    # call functions
     for story_line in lines.vergil_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
-    # options
     option = choose_option(2)
     time.sleep(PAUSE_TRANSITION)
+    # (1) Sit down.
     if option == 1:
         clear()
         ending_vergil()
+    # (2) Leave.
     elif option == 2:
         dialogue(lines.vergil_line_3, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         pygame.mixer.music.unpause()
@@ -911,7 +910,6 @@ while True:
     replay = input("\n   ")
     time.sleep(PAUSE_TRANSITION)
 
-    # jump scene
     if replay.upper() == "Y" or replay.upper() == "YES":
         clear()
         continue
@@ -922,11 +920,9 @@ while True:
         dialogue(lines.replay_error, DIALOGUE_SPEED, PAUSE_TRANSITION)
         break
 
-# call functions
 clear()
 dialogue(lines.quit_line_1, DIALOGUE_SPEED, PAUSE_DIALOGUE)
 dialogue(lines.quit_line_2, DIALOGUE_SPEED, PAUSE_TRANSITION)
 
-# quit
 clear()
 exit()
