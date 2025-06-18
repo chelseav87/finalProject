@@ -38,7 +38,7 @@ intro_line_4 = "You can see them panicking a bit.\033[0;49m You aren't exactly i
                "mind going back.\033[0;49m How about walking back together?\n\n"
 intro_line_5 = '"No,\033[0;49m I have an important family event today, I REALLY need to go."\n\n'
 intro_line_6 = "I mean, it's just homework, right?\033[0;49m It's not that big of a deal.\033[0;49m Surely Mr. W\n" \
-               "wouldn't mind it if you missed it by just one day.\033[0;49m But then again, it is worth 89.70% of\n" \
+               "wouldn't mind it if you missed it by just one day.\033[0;49m But then again, it is worth 90% of\n" \
                "your final grade..\n\n"
 intro_line_7 = "Since you don't have any other plans and you're practically almost finished with your homework,\n" \
                "you offer to go back and get their homework for them.\033[0;49m They thank you profusely before you\n" \
@@ -140,6 +140,7 @@ cubicle_line_12 = "\nYeah, that's enough snooping around for now.\033[0;49m You 
                   "but whatever.\033[0;49m You wouldn't want to go through the trouble of searching or printing out\n" \
                   "a whole new copy without anyone noticing, anyway.\n\n"
 cubicle_line_13 = "You turn back around and leave the staff room, softly closing the door behind you."
+cubicle_line_14 = "\nYou've already seen enough here.\033[0;49m No need to look at that anymore."
 
 hack_option = ["   (1) Enter the password.\n",
                "   (2) Forget it.\n"]
@@ -347,7 +348,7 @@ ending_vergil_2 = "A surge of \033[1;49mPOWER\033[0;49m washes over you,\033[0;4
 ending_vergil_3 = "\033[1;49mA storm is approaching,\033[1;49m provoking the black clouds in isolation.\033[1;49m\n" \
                   "Reclaim your name,\033[1;49m for you are blessed.\033[0;49m\n\n"
 ending_vergil_4 = "Maybe you should stay here for a while.\n\n\033[1;49m"
-ending_vergil_5 = "ENDING:\033[1;49m Berried Delight" + " \U0001F370" + " "
+ending_vergil_5 = "ENDING:\033[1;49m Berried Delight"
 
 # quit
 quit_line_1 = f"Thank you for playing, {username}!"

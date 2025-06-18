@@ -315,6 +315,7 @@ def staff_option():
             dialogue(lines.staff_line_3, DOT_SPEED, PAUSE_TRANSITION)
             dialogue(lines.staff_line_4, DIALOGUE_SPEED, PAUSE_TRANSITION)
             door_open.play()
+            door_creak.play()
             dialogue(lines.staff_line_5, DIALOGUE_SPEED, PAUSE_DIALOGUE)
             dialogue(lines.staff_line_6, DIALOGUE_SPEED, PAUSE_TRANSITION)
             cubicle_option()
@@ -344,8 +345,13 @@ def cubicle_option():
     time.sleep(PAUSE_TRANSITION)
     # (1) Use the laptop.
     if option == 1:
-        dialogue(lines.cubicle_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
-        hack_option()
+        if "prompt_escape" in prompts:
+            dialogue(lines.cubicle_line_14, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            clear()
+            cubicle_option()
+        else:
+            dialogue(lines.cubicle_line_1, DIALOGUE_SPEED, PAUSE_TRANSITION)
+            hack_option()
     # (2) Examine the calendar.
     elif option == 2:
         calendar.play()
@@ -494,7 +500,7 @@ def yard_scene():
 
 
 def yard_option():
-    if "ite_fresh_cake" in inventory:
+    if "item_fresh_cake" in inventory and "   (5) ..What is that in the distance?\n" not in lines.yard_option:
         lines.yard_option.append("   (5) ..What is that in the distance?\n")
 
     for story_line in lines.yard_option:
@@ -633,7 +639,7 @@ def paper_option():
 
 
 def hidden_scene():
-    if 'item_fresh_cake' or 'item_grenade' in inventory:
+    if "item_fresh_cake" in inventory or "item_grenade" in inventory:
         dialogue(lines.hidden_line_2, DIALOGUE_SPEED, PAUSE_DIALOGUE)
         footsteps.play()
         dialogue(lines.hidden_line_3, DIALOGUE_SPEED, PAUSE_TRANSITION)
@@ -915,12 +921,6 @@ while True:
         game_explanation()
         game_running = True
 
-    # reset
-    inventory.clear()
-    prompts.clear()
-    weights = [35, 35, 10, 20]
-    large_box = ["item_rubber_duck", "item_chewed_homework", "item_fresh_cake", "item_grenade"]
-
     replay_line = ["\n\n\n\033[0;49mPlay again? Y/N\n",
                    "Discovered Endings: " + str(len(endings)) + "/8"]
 
@@ -929,6 +929,16 @@ while True:
     time.sleep(PAUSE_TRANSITION)
 
     if replay.upper() == "Y" or replay.upper() == "YES":
+        if "item_fresh_cake" in inventory:
+            lines.yard_option.pop()
+        if "item_grenade" in inventory:
+            lines.bathroom_option.pop()
+        inventory.clear()
+        if "prompt_escape" in prompts:
+            lines.paper_option.pop()
+        prompts.clear()
+        weights = [35, 35, 10, 20]
+        large_box = ["item_rubber_duck", "item_chewed_homework", "item_fresh_cake", "item_grenade"]
         clear()
         continue
     elif replay.upper() == "N" or replay.upper() == "NO":
