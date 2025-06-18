@@ -565,20 +565,23 @@ def bathroom_scene():
 
 
 def bathroom_option():
-    global timeout_occurred
-    timeout_occurred = False
-
     if "item_grenade" in inventory:
         lines.bathroom_option.append("   (3) Destroy everything.\n")
 
     for story_line in lines.bathroom_option:
         dialogue(story_line, OPTION_SPEED, 0)
 
+    # start timer
+    global timeout_occurred
+    timeout_occurred = False
+
     stop_timer.clear()
     bathroom_thread = threading.Thread(target=bathroom_timer)
     bathroom_thread.start()
 
     option = choose_option(len(lines.bathroom_option))
+
+    # end timer
     stop_timer.set()
     if bathroom_thread is not None:
         bathroom_thread.join()
@@ -939,6 +942,7 @@ while True:
         prompts.clear()
         weights = [35, 35, 10, 20]
         large_box = ["item_rubber_duck", "item_chewed_homework", "item_fresh_cake", "item_grenade"]
+
         clear()
         continue
     elif replay.upper() == "N" or replay.upper() == "NO":
