@@ -912,7 +912,7 @@ while True:
         pygame.mixer.music.stop()
         entry_scene()
     else:
-        cubicle_option()
+        game_explanation()
         game_running = True
 
     # reset
